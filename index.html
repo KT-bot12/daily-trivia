@@ -58,6 +58,22 @@
     .animate-card {
       animation: fadeSlideUp 0.28s ease-out both;
     }
+    html.font-size-lg #todayBody,
+    html.font-size-lg #modalBody {
+      font-size: 1.2rem;
+      line-height: 1.85;
+    }
+    html.font-size-lg #todayTitle {
+      font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+    }
+    html.font-size-xl #todayBody,
+    html.font-size-xl #modalBody {
+      font-size: 1.38rem;
+      line-height: 1.9;
+    }
+    html.font-size-xl #todayTitle {
+      font-size: clamp(2rem, 3.8vw, 2.75rem);
+    }
   </style>
 </head>
 <body class="bg-stone-50 text-stone-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen transition-colors duration-200 pb-24 sm:pb-12">
@@ -82,9 +98,13 @@
           <i data-lucide="calendar-days" class="w-4 h-4"></i>
           <span>今日精選</span>
         </button>
-        <button data-tab="explore" type="button" class="nav-tab px-4 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5">
+        <button data-tab="explore" type="button" class="nav-tab px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5">
           <i data-lucide="compass" class="w-4 h-4"></i>
           <span>領域探索</span>
+        </button>
+        <button data-tab="quiz" type="button" class="nav-tab px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5">
+          <i data-lucide="zap" class="w-4 h-4"></i>
+          <span>快問快答</span>
         </button>
         <button data-tab="saved" type="button" class="nav-tab px-4 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5">
           <i data-lucide="bookmark" class="w-4 h-4"></i>
@@ -101,11 +121,14 @@
         </div>
         <div class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200/70 dark:border-emerald-800/60 text-xs font-medium text-emerald-700 dark:text-emerald-300">
           <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
-          <span>已探索 <strong id="headerLearnedCount">0</strong> / <span id="headerTotalCount">38</span></span>
+          <span>已探索 <strong id="headerLearnedCount">0</strong> / <span id="headerTotalCount">62</span></span>
         </div>
         <button id="installAppBtn" type="button" class="h-10 px-3 rounded-xl border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-800 dark:text-amber-300 text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 transition-colors">
           <i data-lucide="smartphone" class="w-4 h-4"></i>
           <span class="hidden xs:inline sm:inline">安裝 App</span>
+        </button>
+        <button id="fontSizeToggleBtn" type="button" title="切換閱讀字體大小（標準／大字／特大字）" aria-label="切換閱讀字體大小" class="h-10 px-2.5 rounded-xl border border-stone-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-center text-xs font-bold text-stone-700 dark:text-slate-200 hover:bg-stone-100 dark:hover:bg-slate-800 transition-colors">
+          <span id="fontSizeLabel">A</span>
         </button>
         <button id="themeToggleBtn" type="button" aria-label="切換深色或淺色主題" class="w-10 h-10 rounded-xl border border-stone-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-center text-stone-600 dark:text-slate-300 hover:bg-stone-100 dark:hover:bg-slate-800 transition-colors">
           <i id="themeIcon" data-lucide="moon" class="w-4 h-4"></i>
@@ -298,7 +321,7 @@
             <span>快速切換 8 大知識領域</span>
           </h2>
           <button id="goExploreAllBtn" type="button" class="text-xs font-semibold text-amber-600 dark:text-amber-400 hover:underline">
-            瀏覽全部 <span id="homeTotalCount">38</span> 則 →
+            瀏覽全部 <span id="homeTotalCount">62</span> 則 →
           </button>
         </div>
         <div id="homeCategoryGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
@@ -311,7 +334,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h2 class="text-lg sm:text-xl font-bold text-stone-900 dark:text-white">領域探索題庫</h2>
-            <p class="text-xs sm:text-sm text-stone-500 dark:text-slate-400">涵蓋 8 大領域、共 <span id="exploreTotalCount">38</span> 則已查證冷知識，每則皆附維基百科連結</p>
+            <p class="text-xs sm:text-sm text-stone-500 dark:text-slate-400">涵蓋 8 大領域、共 <span id="exploreTotalCount">62</span> 則已查證冷知識，每則皆附維基百科連結</p>
           </div>
           <div class="relative w-full sm:w-64">
             <i data-lucide="search" class="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
@@ -321,6 +344,16 @@
 
         <!-- Category Filter Chips -->
         <div id="exploreCategoryChips" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1"></div>
+
+        <!-- Read Status Filter -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-stone-100 dark:border-slate-800">
+          <span class="text-xs font-medium text-stone-500 dark:text-slate-400">閱讀狀態篩選：</span>
+          <div id="exploreStatusFilters" class="inline-flex items-center gap-1 bg-stone-100 dark:bg-slate-800 p-1 rounded-xl">
+            <button type="button" data-status-filter="all" class="status-filter-btn px-3 py-1 rounded-lg text-xs font-semibold transition-all">全部</button>
+            <button type="button" data-status-filter="unread" class="status-filter-btn px-3 py-1 rounded-lg text-xs font-semibold transition-all">只看未讀</button>
+            <button type="button" data-status-filter="learned" class="status-filter-btn px-3 py-1 rounded-lg text-xs font-semibold transition-all">已讀</button>
+          </div>
+        </div>
       </div>
 
       <!-- Result Count -->
@@ -331,6 +364,34 @@
 
       <!-- Cards Grid -->
       <div id="exploreGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+
+    <!-- VIEW 2.5: QUIZ CHALLENGE -->
+    <section id="viewQuiz" class="hidden space-y-5">
+      <div class="bg-white dark:bg-slate-900 border border-stone-200/90 dark:border-slate-800 rounded-3xl p-5 sm:p-8 shadow-sm space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-stone-100 dark:border-slate-800">
+          <div class="space-y-1">
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/15 text-amber-700 dark:text-amber-300">
+              <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+              <span>5 題限時腦力挑戰</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-stone-900 dark:text-white">冷知識快問快答</h2>
+            <p class="text-xs sm:text-sm text-stone-500 dark:text-slate-400">從 62 則維基百科查證題庫中隨機出題，測驗你的跨領域知識力！</p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <div class="px-3 py-2 rounded-xl bg-stone-50 dark:bg-slate-800 border border-stone-200/80 dark:border-slate-700 text-center">
+              <div id="quizBestScoreNum" class="text-base font-extrabold text-amber-600 dark:text-amber-400">0 / 5</div>
+              <div class="text-[11px] text-stone-500 dark:text-slate-400">最高紀錄</div>
+            </div>
+            <div class="px-3 py-2 rounded-xl bg-stone-50 dark:bg-slate-800 border border-stone-200/80 dark:border-slate-700 text-center">
+              <div id="quizPlayedNum" class="text-base font-extrabold text-stone-900 dark:text-white">0 次</div>
+              <div class="text-[11px] text-stone-500 dark:text-slate-400">累積挑戰</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="quizStageContainer" class="space-y-5"></div>
+      </div>
     </section>
 
     <!-- VIEW 3: SAVED & PROGRESS -->
@@ -348,7 +409,7 @@
               <div class="text-[11px] text-orange-600 dark:text-orange-400">連續打卡</div>
             </div>
             <div class="px-3 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200/70 dark:border-emerald-800/60 text-center">
-              <div id="statLearnedNum" class="text-lg font-extrabold text-emerald-700 dark:text-emerald-300">0 / 38</div>
+              <div id="statLearnedNum" class="text-lg font-extrabold text-emerald-700 dark:text-emerald-300">0 / 62</div>
               <div class="text-[11px] text-emerald-600 dark:text-emerald-400">已讀知識</div>
             </div>
             <div class="px-3 py-2 rounded-xl bg-amber-50 dark:bg-amber-950/50 border border-amber-200/70 dark:border-amber-800/60 text-center">
@@ -369,9 +430,31 @@
             <i data-lucide="award" class="w-4 h-4 text-amber-500"></i>
             <span>知識探索成就徽章</span>
           </h3>
-          <span id="badgeUnlockedCount" class="text-xs font-mono text-stone-500 dark:text-slate-400">0 / 6 已解鎖</span>
+          <span id="badgeUnlockedCount" class="text-xs font-mono text-stone-500 dark:text-slate-400">0 / 10 已解鎖</span>
         </div>
         <div id="achievementsGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5"></div>
+      </div>
+
+      <!-- Cross-Device Backup & Restore -->
+      <div class="bg-white dark:bg-slate-900 border border-stone-200/90 dark:border-slate-800 rounded-2xl p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <h3 class="text-sm sm:text-base font-bold text-stone-800 dark:text-slate-200 flex items-center gap-2">
+            <i data-lucide="hard-drive-download" class="w-4 h-4 text-amber-500"></i>
+            <span>跨裝置學習紀錄備份與還原</span>
+          </h3>
+          <p class="text-xs text-stone-500 dark:text-slate-400">無須註冊帳號！可將已讀、收藏、打卡天數與快問快答紀錄匯出成 JSON 檔，在手機或電腦一鍵還原。</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 shrink-0">
+          <button id="exportProgressBtn" type="button" class="min-h-[40px] px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 transition-colors">
+            <i data-lucide="download" class="w-4 h-4"></i>
+            <span>匯出紀錄</span>
+          </button>
+          <button id="importProgressBtn" type="button" class="min-h-[40px] px-4 py-2 rounded-xl border border-stone-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700 text-stone-700 dark:text-slate-200 text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 transition-colors">
+            <i data-lucide="upload" class="w-4 h-4"></i>
+            <span>匯入還原</span>
+          </button>
+          <input id="importProgressFile" type="file" accept="application/json,.json" class="hidden" />
+        </div>
       </div>
 
       <!-- Saved List -->
@@ -385,9 +468,9 @@
     </section>
 
     <footer class="mt-10 pt-6 border-t border-stone-200/80 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-stone-400 dark:text-slate-500">
-      <div>每日冷知識 Daily Trivia <span class="font-mono">v2.0.0</span>・支援離線 PWA 與維基百科即時查證</div>
+      <div>每日冷知識 Daily Trivia <span class="font-mono">v2.5.0</span>・支援離線 PWA 與維基百科即時查證</div>
       <div class="flex items-center gap-3">
-        <span>維基百科即時資料依 CC BY-SA 授權</span>
+        <span class="hidden sm:inline">快捷鍵：←/→ 切日期・R 隨機・S 朗讀</span><span>維基百科即時資料依 CC BY-SA 授權</span>
         <a href="https://github.com/KT-bot12/daily-trivia" target="_blank" rel="noopener noreferrer" class="hover:text-stone-700 dark:hover:text-slate-300 underline">GitHub 原始碼</a>
       </div>
     </footer>
@@ -395,18 +478,22 @@
 
   <!-- Mobile Bottom Navigation Bar -->
   <nav aria-label="行動版導覽" class="sm:hidden fixed bottom-0 inset-x-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-stone-200 dark:border-slate-800 px-2 py-1.5">
-    <div class="grid grid-cols-3 gap-1 max-w-md mx-auto">
-      <button data-tab="today" type="button" class="mobile-tab min-h-[48px] rounded-xl flex flex-col items-center justify-center gap-0.5 text-xs font-medium transition-colors">
+    <div class="grid grid-cols-4 gap-1 max-w-md mx-auto">
+      <button data-tab="today" type="button" class="mobile-tab min-h-[48px] rounded-xl flex flex-col items-center justify-center gap-0.5 text-[11px] font-medium transition-colors">
         <i data-lucide="calendar-days" class="w-5 h-5"></i>
-        <span>今日精選</span>
+        <span>今日</span>
       </button>
-      <button data-tab="explore" type="button" class="mobile-tab min-h-[48px] rounded-xl flex flex-col items-center justify-center gap-0.5 text-xs font-medium transition-colors">
+      <button data-tab="explore" type="button" class="mobile-tab min-h-[48px] rounded-xl flex flex-col items-center justify-center gap-0.5 text-[11px] font-medium transition-colors">
         <i data-lucide="compass" class="w-5 h-5"></i>
-        <span>領域探索</span>
+        <span>探索</span>
       </button>
-      <button data-tab="saved" type="button" class="mobile-tab min-h-[48px] rounded-xl flex flex-col items-center justify-center gap-0.5 text-xs font-medium transition-colors relative">
+      <button data-tab="quiz" type="button" class="mobile-tab min-h-[48px] rounded-xl flex flex-col items-center justify-center gap-0.5 text-[11px] font-medium transition-colors">
+        <i data-lucide="zap" class="w-5 h-5"></i>
+        <span>快問快答</span>
+      </button>
+      <button data-tab="saved" type="button" class="mobile-tab min-h-[48px] rounded-xl flex flex-col items-center justify-center gap-0.5 text-[11px] font-medium transition-colors relative">
         <i data-lucide="bookmark" class="w-5 h-5"></i>
-        <span>收藏 (<span id="mobileSavedBadge">0</span>)</span>
+        <span>收藏(<span id="mobileSavedBadge">0</span>)</span>
       </button>
     </div>
   </nav>
@@ -644,6 +731,1304 @@
     ],
     "sourceTitle": "維基百科：英尚戰爭",
     "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E8%8B%B1%E6%A1%91%E6%88%98%E4%BA%89"
+  },
+  {
+    "id": "f10",
+    "category": "science",
+    "title": "艾菲爾鐵塔會隨日照熱脹冷縮，塔頂最多「歪頭」18 公分",
+    "body": "法國巴黎的艾菲爾鐵塔結構使用了 7,300 公噸熟鐵與 250 萬個鉚釘。由於金屬會熱脹冷縮，當陽光照射鐵塔時，靠近太陽那一側的鐵會受熱膨脹，使整座鐵塔的形狀略為變化，塔頂最多會往遠離太陽的方向偏移達 18 公分。為了防鏽，鐵塔每七年還需重新塗刷 60 公噸油漆。",
+    "highlights": [
+      {
+        "label": "最大偏移量",
+        "value": "最多 18 公分"
+      },
+      {
+        "label": "結構熟鐵重",
+        "value": "7,300 公噸"
+      },
+      {
+        "label": "定期防鏽",
+        "value": "每 7 年 60 公噸漆"
+      }
+    ],
+    "sourceTitle": "維基百科：艾菲爾鐵塔",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E8%89%BE%E8%8F%B2%E7%88%BE%E9%90%B5%E5%A1%94"
+  },
+  {
+    "id": "f19",
+    "category": "culture",
+    "title": "奧運曾在 1912 至 1948 年間頒發「藝術比賽」金銀銅牌",
+    "body": "受現代奧運發起人古柏坦效法古希臘精神的構想影響，1912 年至 1948 年間，奧運曾正式舉辦「繆斯五項藝術比賽」，涵蓋建築、文學、音樂、繪畫與雕塑五大項，參賽作品須與體育相關且未曾發表。後來因參賽者多為職業藝術家，與早期奧運堅持的業餘原則相違背，自 1954 年起改為非競賽性的藝術展覽。",
+    "highlights": [
+      {
+        "label": "舉辦時期",
+        "value": "1912–1948 年"
+      },
+      {
+        "label": "五大類別",
+        "value": "建築文學音樂繪畫雕塑"
+      },
+      {
+        "label": "取消轉型",
+        "value": "1954 年改為展覽"
+      }
+    ],
+    "sourceTitle": "維基百科：奧林匹克運動會藝術比賽",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E5%A5%A5%E6%9E%97%E5%8C%B9%E5%85%8B%E8%BF%90%E5%8A%A8%E4%BC%9A%E8%89%BA%E6%9C%AF%E6%AF%94%E8%B5%9B"
+  },
+  {
+    "id": "f23",
+    "category": "tech",
+    "title": "電腦故障被稱作「Bug」，真的曾有一隻飛蛾卡進電腦裡",
+    "body": "1947 年 9 月 9 日，美國電腦科學先驅葛麗絲·霍普（Grace Hopper）的團隊在排查 Mark II 電腦突然當機的原因時，意外發現一隻飛蛾飛進機器內部造成故障。團隊將飛蛾貼在工作誌上紀錄這個「第一個實際找到的電腦蟲（Bug）」，這份珍貴手稿至今仍保存於華盛頓的美國國家歷史博物館。",
+    "highlights": [
+      {
+        "label": "事件日期",
+        "value": "1947 年 9 月 9 日"
+      },
+      {
+        "label": "故障元兇",
+        "value": "飛入 Mark II 的飛蛾"
+      },
+      {
+        "label": "館藏地點",
+        "value": "美國國家歷史博物館"
+      }
+    ],
+    "sourceTitle": "維基百科：程式錯誤",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E7%A8%8B%E5%BA%8F%E9%94%99%E8%AF%AF"
+  },
+  {
+    "id": "f28",
+    "category": "food",
+    "title": "植物學上香蕉和西瓜都是「漿果」，但黑莓與覆盆子其實不是",
+    "body": "在植物學定義中，「漿果」（Berry）指的是由單朵花的子房發育而成的肉質單果，因此香蕉、番茄、西瓜、南瓜、番木瓜都完全符合漿果的科學定義。反倒是日常英文名稱帶有 berry 的黑莓（blackberry）、覆盆子（raspberry）與桑葚（mulberry），在植物學分類上其實屬於「聚合果」，並非真正的漿果。",
+    "highlights": [
+      {
+        "label": "真正的漿果",
+        "value": "香蕉、番茄、西瓜"
+      },
+      {
+        "label": "非漿果（聚合果）",
+        "value": "黑莓、覆盆子、桑葚"
+      },
+      {
+        "label": "分類依據",
+        "value": "單花子房發育而成"
+      }
+    ],
+    "sourceTitle": "維基百科：漿果",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E6%B5%86%E6%9E%9C"
+  },
+  {
+    "id": "f31",
+    "category": "geography",
+    "title": "死海湖面低於海平面 424 公尺，是地球已露出陸地的最低點",
+    "body": "位於中東的死海是世界上地勢最低的湖泊，湖面海拔達 −424 公尺，湖岸線即為地球表面已露出陸地的最低點，湖泊最深處可達 330 公尺。由於湖水鹽度極高且越往湖底越高，死海擁有驚人的浮力，即使不會游泳的人也能輕易仰漂在水面上。",
+    "highlights": [
+      {
+        "label": "湖面海拔",
+        "value": "−424 公尺"
+      },
+      {
+        "label": "最大水深",
+        "value": "330 公尺"
+      },
+      {
+        "label": "湖泊面積",
+        "value": "810 平方公里"
+      }
+    ],
+    "sourceTitle": "維基百科：死海",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E6%AD%BB%E6%B5%B7"
+  },
+  {
+    "id": "f02",
+    "category": "space",
+    "title": "火星上的「奧林帕斯山」高達 21,229 公尺，將近聖母峰三倍",
+    "body": "火星上的盾狀火山奧林帕斯山（Olympus Mons）是太陽系行星中已知最高的山峰，高於火星基準面達 21,229 公尺，將近地球聖母峰的三倍高，山體直徑更廣達 648 公里。1972 年水手 9 號探測器從軌道拍下照片後，人類才正式確認它遠高於地球上的任何一座山。",
+    "highlights": [
+      {
+        "label": "基準面高度",
+        "value": "21,229 公尺"
+      },
+      {
+        "label": "火山直徑",
+        "value": "648 公里"
+      },
+      {
+        "label": "確認探測器",
+        "value": "1972 年水手 9 號"
+      }
+    ],
+    "sourceTitle": "維基百科：奧林帕斯山 (火星)",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E5%A5%A7%E6%9E%97%E5%B8%95%E6%96%AF%E5%B1%B1_(%E7%81%AB%E6%98%9F)"
+  },
+  {
+    "id": "f06",
+    "category": "biology",
+    "title": "澳洲袋熊是自然界目前已知唯一會排出「立方體」糞便的動物",
+    "body": "棲息於澳洲的袋熊新陳代謝極慢，消化食物大約需要 14 天，且是目前已知自然界中唯一能排出方形立方體排遺的動物，生物學家推測可能與標記領地有關。另一個冷知識是，袋熊的育幼袋開口朝後，這樣在挖掘地底洞穴時，泥土才不會灌進袋中弄傷小袋熊。",
+    "highlights": [
+      {
+        "label": "消化時間",
+        "value": "約 14 天"
+      },
+      {
+        "label": "排遺特徵",
+        "value": "自然界唯一立方體"
+      },
+      {
+        "label": "育幼袋設計",
+        "value": "開口朝後防進土"
+      }
+    ],
+    "sourceTitle": "維基百科：袋熊",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E8%A2%8B%E7%86%8A"
+  },
+  {
+    "id": "f16",
+    "category": "history",
+    "title": "日本建築公司「金剛組」創立於西元 578 年，曾為世上最古家族企業",
+    "body": "總部位於大阪的金剛組創辦於西元 578 年，專精寺廟建築與修繕，曾是世界上歷史最悠久的家族企業，歷經 40 代「堂主」傳承，撐過明治維新與二戰。直到 2006 年因經濟泡沫負債進行清算，由高松建設接管並延續品牌，至今仍繼續從事傳統寺廟建築工藝。",
+    "highlights": [
+      {
+        "label": "創立年份",
+        "value": "西元 578 年"
+      },
+      {
+        "label": "家族傳承",
+        "value": "40 代堂主"
+      },
+      {
+        "label": "核心本業",
+        "value": "傳統寺廟建築"
+      }
+    ],
+    "sourceTitle": "維基百科：金剛組",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E9%87%91%E5%89%9B%E7%B5%84"
+  },
+  {
+    "id": "f11",
+    "category": "science",
+    "title": "堅硬無比的鑽石與柔軟的鉛筆石墨，竟然都由純碳元素組成",
+    "body": "外觀透明、硬度極高的鑽石（金剛石），與柔軟滑膩、不透明且能導電的石墨，其實都是純碳元素的「同素異形體」。兩者性質之所以天差地遠，完全取決於碳原子的晶體排列方式：石墨呈層狀蜂窩六邊形結構且層間作用力弱，因而質軟並具自由電子可導電。",
+    "highlights": [
+      {
+        "label": "化學成分",
+        "value": "100% 純碳元素"
+      },
+      {
+        "label": "科學名詞",
+        "value": "同素異形體"
+      },
+      {
+        "label": "石墨特性",
+        "value": "層狀六邊形・可導電"
+      }
+    ],
+    "sourceTitle": "維基百科：石墨",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E7%9F%B3%E5%A2%A8"
+  },
+  {
+    "id": "f21",
+    "category": "culture",
+    "title": "蘇格蘭的官方國獸，竟然是神話生物「獨角獸」",
+    "body": "許多國家的國獸是真實存在的猛獸或珍稀動物，但蘇格蘭的官方象徵與國獸卻是傳說中的獨角獸。在凱爾特神話裡，獨角獸象徵正直與純潔；早在 15 世紀蘇格蘭國王詹姆斯三世統治時期，就曾發行印有獨角獸圖案的硬幣，至今蘇格蘭皇家徽章上仍能見到獨角獸的身影。",
+    "highlights": [
+      {
+        "label": "官方國獸",
+        "value": "獨角獸（神話生物）"
+      },
+      {
+        "label": "象徵意義",
+        "value": "正直與純潔"
+      },
+      {
+        "label": "歷史紀錄",
+        "value": "15 世紀即印於硬幣"
+      }
+    ],
+    "sourceTitle": "維基百科：獨角獸",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E7%8B%AC%E8%A7%92%E5%85%BD"
+  },
+  {
+    "id": "f26",
+    "category": "tech",
+    "title": "讓人愛不釋手的「氣泡布」，最初竟然是為了當立體壁紙發明的",
+    "body": "1957 年，兩位發明家阿爾弗雷德·菲爾丁和馬克·沙瓦納原本試圖設計一種「三維塑膠壁紙」。雖然這款壁紙在市場上失敗了，但他們發現這種充滿空氣泡的塑膠膜非常適合緩衝防撞，進而改作為包裝材料，並於 1960 年創立希悅爾公司（Sealed Air），成就了全球最常見的包材。",
+    "highlights": [
+      {
+        "label": "發明年份",
+        "value": "1957 年"
+      },
+      {
+        "label": "原始構想",
+        "value": "三維塑膠壁紙"
+      },
+      {
+        "label": "博物館用法",
+        "value": "平滑面朝內防壓痕"
+      }
+    ],
+    "sourceTitle": "維基百科：氣泡布",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E6%B0%A3%E6%B3%A1%E5%B8%83"
+  },
+  {
+    "id": "f29",
+    "category": "food",
+    "title": "可口可樂誕生於 1886 年，原本是由一位美國藥師調配出來的",
+    "body": "1886 年 5 月 8 日，美國喬治亞州亞特蘭大市的藥師約翰·彭伯頓（John Pemberton）創造了可口可樂的原始糖漿配方，日後發展成全球最具代表性的焦糖色汽水飲料品牌。",
+    "highlights": [
+      {
+        "label": "誕生日期",
+        "value": "1886 年 5 月 8 日"
+      },
+      {
+        "label": "發源地點",
+        "value": "美國亞特蘭大市"
+      },
+      {
+        "label": "發明人職業",
+        "value": "藥師約翰·彭伯頓"
+      }
+    ],
+    "sourceTitle": "維基百科：可口可樂",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E5%8F%AF%E5%8F%A3%E5%8F%AF%E4%B9%90"
+  },
+  {
+    "id": "f32",
+    "category": "geography",
+    "title": "撒哈拉沙漠面積超過 940 萬平方公里，幾乎等於整個美國國土",
+    "body": "橫跨北非、東至紅海、西至大西洋的撒哈拉沙漠，總面積超過 9,400,000 平方公里（約 360 萬平方英里），幾乎與整個美國國土面積相當。它是地球上規模僅次於南極與北極荒漠的廣大乾燥區域。",
+    "highlights": [
+      {
+        "label": "總面積",
+        "value": "超過 940 萬平方公里"
+      },
+      {
+        "label": "面積對比",
+        "value": "約等於美國國土"
+      },
+      {
+        "label": "地理橫跨",
+        "value": "紅海至大西洋"
+      }
+    ],
+    "sourceTitle": "維基百科：撒哈拉沙漠",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E6%92%92%E5%93%88%E6%8B%89%E6%B2%99%E6%BC%A0"
+  },
+  {
+    "id": "f03",
+    "category": "space",
+    "title": "土星的平均密度比水還低，若有夠大的泳池它甚至能浮起來",
+    "body": "身為太陽系著名的氣體巨行星，土星體積是地球的 760 倍，質量為地球的 95 倍，但大氣層高達 96% 為氫、3% 為氦，使其平均密度低至每立方公分 0.687 克——比水的密度（每立方公分 1 克）還小，因此理論上能浮在水面上。",
+    "highlights": [
+      {
+        "label": "平均密度",
+        "value": "0.687 g/cm³"
+      },
+      {
+        "label": "大氣主成分",
+        "value": "96% 氫、3% 氦"
+      },
+      {
+        "label": "體積比例",
+        "value": "地球的 760 倍"
+      }
+    ],
+    "sourceTitle": "維基百科：冷木星（土星章節）",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E5%86%B7%E6%9C%A8%E6%98%9F"
+  },
+  {
+    "id": "f07",
+    "category": "biology",
+    "title": "章魚擁有 3 顆心臟，且三分之二的神經索都長在觸手上",
+    "body": "章魚不僅有 3 顆心臟與 8 條腕（每條腕上約有 240 個吸盤），還擁有無脊椎動物中最高的大腦與身體比重。更特別的是，牠有三分之二的神經索分布在觸手內，使觸手能夠繞過大腦獨立進行複雜的反射活動，而不必完全依賴中樞大腦統一指揮。",
+    "highlights": [
+      {
+        "label": "心臟數量",
+        "value": "3 顆心臟"
+      },
+      {
+        "label": "觸手神經比例",
+        "value": "占全身三分之二"
+      },
+      {
+        "label": "吸盤數量",
+        "value": "每腕約 240 個"
+      }
+    ],
+    "sourceTitle": "維基百科：八腕目",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E5%85%AB%E8%85%95%E7%9B%AE"
+  },
+  {
+    "id": "f17",
+    "category": "history",
+    "title": "歷史上的維京戰士，在戰場上其實從來不戴「有角的頭盔」",
+    "body": "卡通與影視常見的維京牛角頭盔其實是後世誤解。實戰近距離格鬥中，角盔既累贅又容易危及戰友，並無考古證據顯示維京戰士戴角盔作戰；唯一出土的真正維京鐵盔（挪威 Gjermundbu）並無雙角。角盔印象主要源自 19 世紀歐洲民族浪漫主義與華格納 1876 年歌劇《尼伯龍根的指環》舞台服裝。",
+    "highlights": [
+      {
+        "label": "實戰裝備",
+        "value": "無角皮革或鐵製頭盔"
+      },
+      {
+        "label": "迷思來源",
+        "value": "1876 年華格納歌劇"
+      },
+      {
+        "label": "唯一出土真品",
+        "value": "挪威 Gjermundbu 鐵盔"
+      }
+    ],
+    "sourceTitle": "維基百科：維京人",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E7%B6%AD%E4%BA%AC%E4%BA%BA"
+  },
+  {
+    "id": "f12",
+    "category": "science",
+    "title": "雙重彩虹外圈「霓」顏色完全相反，且最長彩虹世界紀錄在台北陽明山",
+    "body": "當天空出現雙重彩虹時，外側較暗的「霓」因為陽光在雨滴內經過不同的折射與反射次數，色彩排列順序與內側主虹剛好相反，呈現「紅在內、紫在外」。此外，2017 年 11 月 30 日臺北市陽明山出現高掛長達 9 小時的彩虹，打破 1994 年英國約克郡 6 小時的紀錄。",
+    "highlights": [
+      {
+        "label": "霓的色序",
+        "value": "紅在內・紫在外"
+      },
+      {
+        "label": "最長紀錄地點",
+        "value": "臺北市陽明山"
+      },
+      {
+        "label": "持續時間",
+        "value": "9 小時（2017 年）"
+      }
+    ],
+    "sourceTitle": "維基百科：彩虹",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E5%BD%A9%E8%99%B9"
+  },
+  {
+    "id": "f20",
+    "category": "culture",
+    "title": "《蒙娜麗莎》在 1911 年被前羅浮宮玻璃工輕鬆夾在腋下偷走",
+    "body": "1911 年，曾在羅浮宮負責裝框的義大利裝潢工人溫琴佐·佩魯賈利用對畫框構造的熟悉，趁機取下《蒙娜麗莎》，在服務樓梯間拆掉玻璃與畫框後，用脫下的工作服包裹畫作夾在腋下離開羅浮宮。失竊直到隔天才被發現，警方大陣仗調查期間甚至連畢卡索都曾遭逮捕偵訊。",
+    "highlights": [
+      {
+        "label": "失竊年份",
+        "value": "1911 年"
+      },
+      {
+        "label": "竊賊身分",
+        "value": "前羅浮宮裝框玻璃工"
+      },
+      {
+        "label": "離譜插曲",
+        "value": "畢卡索曾遭逮捕偵訊"
+      }
+    ],
+    "sourceTitle": "維基百科：溫琴佐·佩魯賈",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E6%BA%AB%E7%90%B4%E4%BD%90%C2%B7%E4%BD%A9%E9%AD%AF%E8%B3%88"
+  },
+  {
+    "id": "f24",
+    "category": "tech",
+    "title": "國際求救訊號「SOS」原本並不是任何英文句子的縮寫",
+    "body": "許多人以為 SOS 是「Save Our Souls」的縮寫，但其實它是為了方便摩斯電碼收發而設計的：S（···）與 O（---）組成的「···---···」是少見的連續對稱電碼，在訊號干擾下極易辨識。SOS 於 1908 年後廣為採用，首次有紀錄使用是 1909 年的阿拉帕霍號，1912 年鐵達尼號沉沒時也曾在傳統 CQD 訊號中夾雜發送 SOS。",
+    "highlights": [
+      {
+        "label": "摩斯電碼",
+        "value": "··· --- ···"
+      },
+      {
+        "label": "選用原因",
+        "value": "連續對稱、抗干擾易記"
+      },
+      {
+        "label": "首度紀錄使用",
+        "value": "1909 年阿拉帕霍號"
+      }
+    ],
+    "sourceTitle": "維基百科：SOS",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/SOS"
+  },
+  {
+    "id": "f30",
+    "category": "food",
+    "title": "咖啡「跳舞山羊」起源傳說，考證最早其實出自 1671 年的羅馬論文",
+    "body": "咖啡館最愛講的故事——衣索比亞牧羊人加爾第（Kaldi）在西元 850 年左右看到山羊吃了咖啡果實後興奮跳舞而發現咖啡——經學者考證很可能是後世虛構的文學傳說。這個故事最早出現在 1671 年羅馬東方語言教授奈隆的咖啡著作中，如今仍廣泛啟發全球咖啡品牌命名。",
+    "highlights": [
+      {
+        "label": "傳說主角",
+        "value": "牧羊人加爾第（Kaldi）"
+      },
+      {
+        "label": "最早文獻年份",
+        "value": "1671 年羅馬論文"
+      },
+      {
+        "label": "傳說背景年代",
+        "value": "約西元 850 年"
+      }
+    ],
+    "sourceTitle": "維基百科：加爾第",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E5%8A%A0%E7%88%BE%E7%AC%AC"
+  },
+  {
+    "id": "f33",
+    "category": "geography",
+    "title": "巴拿馬運河並非平坦相通，船隻必須靠船閘「爬上」海拔 26 公尺",
+    "body": "全長 82 公里的巴拿馬運河於 1914 年通航，連接大西洋與太平洋，讓船隻不必繞行南美洲南端。由於運河中段是海拔約 26 公尺的人工湖「加通湖」（面積約 470 平方公里），船隻通行時必須經過三級船閘注水逐級抬升至湖面高度，穿過湖區後再由另一端船閘降回海平面。",
+    "highlights": [
+      {
+        "label": "運河全長",
+        "value": "82 公里"
+      },
+      {
+        "label": "加通湖海拔",
+        "value": "約 26 公尺"
+      },
+      {
+        "label": "通行機制",
+        "value": "兩端各經 3 級船閘"
+      }
+    ],
+    "sourceTitle": "維基百科：巴拿馬運河",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E5%B7%B4%E6%8B%BF%E9%A9%AC%E8%BF%90%E6%B2%B3"
+  },
+  {
+    "id": "f04",
+    "category": "space",
+    "title": "國際太空站時速高達 27,600 公里，每 92.68 分鐘就繞地球一圈",
+    "body": "運行於平均海拔約 417 至 421 公里低地球軌道的國際太空站（ISS），平均飛行速度高達每秒 7,660 公尺（約每小時 27,600 公里），繞行地球一圈的軌道週期僅需 92.68 分鐘，是人類在太空中高速運轉的國際研究基地。",
+    "highlights": [
+      {
+        "label": "軌道海拔",
+        "value": "約 417–421 公里"
+      },
+      {
+        "label": "平均速度",
+        "value": "27,600 公里/小時"
+      },
+      {
+        "label": "軌道週期",
+        "value": "92.68 分鐘"
+      }
+    ],
+    "sourceTitle": "維基百科：國際太空站",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E5%9B%BD%E9%99%85%E7%A9%BA%E9%97%B4%E7%AB%99"
+  },
+  {
+    "id": "f08",
+    "category": "biology",
+    "title": "藍鯨的舌頭重達 2.7 公噸，但喉嚨卻吞不下一顆沙灘球",
+    "body": "藍鯨是地球史上已知體型最大的動物，科學證實最長達 29.9 公尺、估計最重達 199 公噸。牠的舌頭約重 2.7 公噸，北大西洋藍鯨心臟平均重 180 公斤（有汽車大小），剛出生的幼鯨體重即達 2,700 公斤；但令人意外的是，藍鯨的喉嚨十分狹窄，連一顆沙灘球寬度的物體都無法吞下，只能濾食磷蝦維生。",
+    "highlights": [
+      {
+        "label": "舌頭重量",
+        "value": "約 2.7 公噸"
+      },
+      {
+        "label": "心臟平均重量",
+        "value": "180 公斤"
+      },
+      {
+        "label": "新生幼鯨體重",
+        "value": "2,700 公斤"
+      }
+    ],
+    "sourceTitle": "維基百科：藍鯨",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E8%93%9D%E9%B2%B8"
+  },
+  {
+    "id": "f18",
+    "category": "history",
+    "title": "牛津大學沒有確切創校日，但早在西元 1096 年就已有教學紀錄",
+    "body": "英國著名的牛津大學歷史悠久到沒有明確的建校日期，不過依據現存文獻，牛津地區早在西元 1096 年就已經存在某種形式的大學教學活動，至今已延續超過九個世紀。",
+    "highlights": [
+      {
+        "label": "最早教學紀錄",
+        "value": "西元 1096 年"
+      },
+      {
+        "label": "歷史跨度",
+        "value": "逾 900 年"
+      },
+      {
+        "label": "制度特色",
+        "value": "書院聯邦制"
+      }
+    ],
+    "sourceTitle": "維基百科：牛津大學",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E7%89%9B%E6%B4%A5%E5%A4%A7%E5%AD%A6"
+  },
+  {
+    "id": "f13",
+    "category": "science",
+    "title": "新生兒的骨頭其實比成人的 206 塊更多，成長後才逐漸癒合",
+    "body": "標準成年人的骨架由 206 塊骨骼組成，但在嬰兒剛出生時，許多骨骼還處於分離狀態。例如成人的 1 塊薦骨（Sacrum），在新生兒時期其實是由 5 節分開的骨頭構成；隨著發育成長，這些骨骼會逐漸融合癒合，使成人骨骼總數反而比新生兒少。",
+    "highlights": [
+      {
+        "label": "成人標準骨數",
+        "value": "206 塊"
+      },
+      {
+        "label": "薦骨變化",
+        "value": "新生兒 5 節 → 成人 1 塊"
+      },
+      {
+        "label": "減少原因",
+        "value": "成長過程中自然癒合"
+      }
+    ],
+    "sourceTitle": "維基百科：人體骨骼列表",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E4%BA%BA%E4%BD%93%E9%AA%A8%E9%AA%BC%E5%88%97%E8%A1%A8"
+  },
+  {
+    "id": "f22",
+    "category": "culture",
+    "title": "音樂神童莫札特在短短 35 年生命中，創作了超過 800 部作品",
+    "body": "奧地利古典時期作曲家沃夫岡·阿瑪迪斯·莫札特（1756–1791）身兼鋼琴家與小提琴家，從 6 歲左右便開始留下創作紀錄。儘管英年早逝、享年僅 35 歲，他一生創作了逾 800 部音樂作品，涵蓋交響曲、協奏曲、歌劇與室內樂等各種體裁。",
+    "highlights": [
+      {
+        "label": "在世年份",
+        "value": "1756–1791（35 歲）"
+      },
+      {
+        "label": "一生創作量",
+        "value": "超過 800 部作品"
+      },
+      {
+        "label": "早期作品起點",
+        "value": "約 6 歲開始譜曲"
+      }
+    ],
+    "sourceTitle": "維基百科：沃夫岡·阿瑪迪斯·莫札特",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E6%B2%83%E5%B0%94%E5%A4%AB%E5%86%88%C2%B7%E9%98%BF%E7%8E%9B%E5%A4%9A%E4%BC%8A%E6%96%AF%C2%B7%E8%8E%AB%E6%89%8E%E7%89%B9"
+  },
+  {
+    "id": "f25",
+    "category": "tech",
+    "title": "古羅馬的「凱撒密碼」，用簡單的字母位移就能加密軍事情報",
+    "body": "凱撒密碼以羅馬共和時期的凱撒命名，據稱是他與將軍聯繫時使用的替換式加密法。做法是將明文中的每個字母在字母表上固定向後（或向前）推移特定位數——例如偏移量為 3 時，A 會變成 D、B 會變成 E。雖然現代容易被頻率分析破解，卻是密碼學史上的經典起點。",
+    "highlights": [
+      {
+        "label": "密碼類型",
+        "value": "替換式密碼"
+      },
+      {
+        "label": "經典偏移量 3",
+        "value": "A → D、B → E"
+      },
+      {
+        "label": "歷史用途",
+        "value": "羅馬時期軍事通訊"
+      }
+    ],
+    "sourceTitle": "維基百科：凱撒密碼",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E5%87%B1%E6%92%92%E5%AF%86%E7%A2%BC"
+  },
+  {
+    "id": "f09",
+    "category": "biology",
+    "title": "雄性「濕地葦鶯」的歌聲，平均能模仿約 75 種其他鳥類的叫聲",
+    "body": "外表樸素的濕地葦鶯是鳥類界的超級模仿大師！每一隻雄性濕地葦鶯的鳴唱曲目裡，平均結合了約 75 種不同鳥類（包含其他雀形目、涉禽、犀鳥與鴿子）的模仿音，而且這些「歌單」全都在牠出生後第一年的夏季與非洲越冬期間學成，之後就不再新增。",
+    "highlights": [
+      {
+        "label": "平均模仿種數",
+        "value": "約 75 種鳥類"
+      },
+      {
+        "label": "學習黃金期",
+        "value": "出生後第一年內"
+      },
+      {
+        "label": "模仿對象",
+        "value": "雀形目、涉禽、鴿子等"
+      }
+    ],
+    "sourceTitle": "維基百科：濕地葦鶯",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E6%BF%95%E5%9C%B0%E8%91%A6%E9%B6%AF"
+  },
+  {
+    "id": "f14",
+    "category": "science",
+    "title": "搞笑諾貝爾獎發現：3 公斤以上哺乳動物排尿幾乎都在 21 秒左右完成",
+    "body": "美國喬治亞理工學院流體力學教授胡立德（David L. Hu）與楊佩良團隊比對動物園內各種體重 3 公斤以上的哺乳動物，驚人地發現無論體型多大，牠們幾乎都能在 21±13 秒內完成排尿，關鍵在於尿道構造讓排尿效率大幅提升。這項研究讓團隊獲得 2015 年搞笑諾貝爾物理學獎，之後他們又因研究袋熊方形糞便於 2019 年再度獲獎。",
+    "highlights": [
+      {
+        "label": "平均排尿時間",
+        "value": "21 ± 13 秒"
+      },
+      {
+        "label": "適用範圍",
+        "value": "3 公斤以上哺乳動物"
+      },
+      {
+        "label": "獲獎紀錄",
+        "value": "2015 搞笑諾貝爾物理獎"
+      }
+    ],
+    "sourceTitle": "維基百科：胡立德",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E8%83%A1%E7%AB%8B%E5%BE%B7"
+  },
+  {
+    "id": "f27",
+    "category": "tech",
+    "title": "魔術方塊是建築教授發明的，四階方塊的英文原名竟叫「魯比克的復仇」",
+    "body": "風靡全球的魔術方塊由匈牙利建築學教授暨雕塑家魯比克·艾爾諾於 1974 年發明，最初名稱為「Magic Cube」。後來由 Péter Sebestény 設計的四階魔術方塊，在正式量產前更被命名為「Rubik's Revenge」，直譯就是「魯比克的復仇」。",
+    "highlights": [
+      {
+        "label": "發明年份",
+        "value": "1974 年"
+      },
+      {
+        "label": "發明者職業",
+        "value": "建築學教授暨雕塑家"
+      },
+      {
+        "label": "四階英文原名",
+        "value": "Rubik's Revenge"
+      }
+    ],
+    "sourceTitle": "維基百科：魔術方塊",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E9%AD%94%E6%96%B9"
+  },
+  {
+    "id": "f34",
+    "category": "space",
+    "title": "中子星密度驚人，每立方公分重達 8,000 萬至 20 億公噸",
+    "body": "一顆典型的中子星質量介於太陽的 1.35 至 2.1 倍，半徑卻被壓縮到僅 10 至 20 公里，使它的密度高達每立方公分 8,000 萬至 20 億公噸（接近原子核密度），逃逸速度可達每秒 150,000 公里（接近光速的一半）。其中磁場極強的「磁星」，磁力甚至足以在月球軌道一半的距離外擦除地球上的信用卡磁條。",
+    "highlights": [
+      {
+        "label": "驚人密度",
+        "value": "8×10⁷–2×10⁹ 噸/cm³"
+      },
+      {
+        "label": "星體半徑",
+        "value": "僅 10–20 公里"
+      },
+      {
+        "label": "逃逸速度",
+        "value": "最高約 15 萬公里/秒"
+      }
+    ],
+    "sourceTitle": "維基百科：中子星",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E4%B8%AD%E5%AD%90%E6%98%9F"
+  },
+  {
+    "id": "f35",
+    "category": "biology",
+    "title": "長頸鹿的脖子長達 2 至 2.4 公尺，頸椎骨卻和人類一樣只有 7 塊",
+    "body": "長頸鹿擁有陸地動物中最長的脖子，長度可達 2 至 2.4 公尺，但牠與近親㺢㹢狓，以及人類、老鼠等絕大多數哺乳動物一樣，頸椎都只有 7 塊骨頭，只是每一節都大幅拉長。此外，科學家在為太空人與戰鬥機飛行員設計抗重力服裝時，也曾深入研究長頸鹿如何在高血壓下維持腦部供血。",
+    "highlights": [
+      {
+        "label": "頸部長度",
+        "value": "2–2.4 公尺"
+      },
+      {
+        "label": "頸椎數量",
+        "value": "僅 7 塊（與人類相同）"
+      },
+      {
+        "label": "科研啟發",
+        "value": "太空與飛行員抗重力服"
+      }
+    ],
+    "sourceTitle": "維基百科：長頸鹿",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E9%95%BF%E9%A2%88%E9%B9%BF"
+  },
+  {
+    "id": "f36",
+    "category": "history",
+    "title": "比薩斜塔並非故意蓋斜，現代工程曾耗資 3,960 萬美元將它扶正約 46 公分",
+    "body": "義大利比薩斜塔始建於 1173 年、1372 年完工，原本設計為垂直鐘樓，但在動工後不久便因地基不均勻與土層鬆軟而開始傾斜。由於傾斜一度危及結構安全，1990 年起封塔展開長達 11 年、耗資約 3,960 萬美元的修復工程，並於 2001 年重新開放；2023 年監測顯示斜塔累計已扶正約 46 公分，專家估計 300 年內不會倒下。",
+    "highlights": [
+      {
+        "label": "興建時期",
+        "value": "1173–1372 年"
+      },
+      {
+        "label": "修繕費用",
+        "value": "約 3,960 萬美元"
+      },
+      {
+        "label": "累計扶正",
+        "value": "約 46 公分"
+      }
+    ],
+    "sourceTitle": "維基百科：比薩斜塔",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E6%AF%94%E8%90%A8%E6%96%9C%E5%A1%94"
+  },
+  {
+    "id": "f37",
+    "category": "food",
+    "title": "第五種基本味覺「鮮味」，是 1908 年日本化學家從昆布高湯發現的",
+    "body": "1907 年，東京帝國大學化學教授池田菊苗在晚餐喝昆布高湯時，發現其中存在一種獨立於酸、甜、苦、鹹之外的美味。他隨後著手分析昆布的化學成分，於 1908 年成功分離出麩胺酸鈉（MSG），確認這正是「鮮味」的化學基礎，並將產品命名為「味之素」，於 1985 年獲選為日本十大發明家之一。",
+    "highlights": [
+      {
+        "label": "發現年份",
+        "value": "1908 年"
+      },
+      {
+        "label": "發現者",
+        "value": "化學教授池田菊苗"
+      },
+      {
+        "label": "關鍵成分",
+        "value": "麩胺酸鈉（MSG）"
+      }
+    ],
+    "sourceTitle": "維基百科：池田菊苗",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E6%B1%A0%E7%94%B0%E8%8F%8A%E8%8B%97"
+  },
+  {
+    "id": "f38",
+    "category": "geography",
+    "title": "尼泊爾國旗是世界唯一的非矩形國旗，官方長寬比還是無理數",
+    "body": "尼泊爾國旗由兩個重疊的直角三角形組成，是目前世界上唯一的非矩形國旗，也是唯一「高度大於寬度」的國家旗幟。尼泊爾憲法附表詳細規定了國旗的幾何畫法，加上藍色邊框後的標準長寬比甚至是一個無理數（約 1 : 1.21901033...）；而在 1962 年改版之前，旗面上的太陽與新月還各畫有一張人臉。",
+    "highlights": [
+      {
+        "label": "旗幟形狀",
+        "value": "世界唯一非矩形國旗"
+      },
+      {
+        "label": "標準長寬比",
+        "value": "無理數（約 1 : 1.219）"
+      },
+      {
+        "label": "1962 年前舊版",
+        "value": "日月圖案上畫有人臉"
+      }
+    ],
+    "sourceTitle": "維基百科：尼泊爾國旗",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E5%B0%BC%E6%B3%8A%E5%B0%94%E5%9B%BD%E6%97%97"
+  },
+  {
+    "id": "f39",
+    "category": "geography",
+    "title": "玉山國家公園僅占台灣面積約 3%，卻蘊含全台半數以上原生植物",
+    "body": "玉山主峰海拔 3,952.430 公尺，是台灣最高峰，地形突起度名列全球第 27 名。玉山國家公園面積僅約占台灣總面積 3%，卻因劇烈海拔落差涵蓋亞熱帶到高山寒原生態系，蘊含台灣半數以上的原生植物。有趣的是，戰後台灣曾長期沿用 1957 年美軍製圖局 3,997 公尺的標高數據，1966 年甚至在山頂豎立于右任銅像試圖補足 4,000 公尺，直到 1995 至 1996 年銅像遭毀後才改立「玉山主峰 標高 3952 公尺」巨石。",
+    "highlights": [
+      {
+        "label": "主峰精確海拔",
+        "value": "3,952.430 公尺"
+      },
+      {
+        "label": "地形突起度排名",
+        "value": "全球第 27 名"
+      },
+      {
+        "label": "園區原生植物占比",
+        "value": "全台半數以上"
+      }
+    ],
+    "sourceTitle": "維基百科：玉山",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E7%8E%89%E5%B1%B1"
+  },
+  {
+    "id": "f40",
+    "category": "science",
+    "title": "台北 101 曾蟬聯 5 年世界最高建築，全棟共配置 61 座電梯",
+    "body": "台北 101 由台灣建築師李祖原與王重平共同設計，擁有地上 101 層與地下 5 層，全棟共配置 61 座電梯。它在 2004 年超越馬來西亞雙峰塔成為當時世界最高建築，並一路保持這項紀錄直到 2009 年才由杜拜哈里發塔接棒，成為 21 世紀初摩天大樓抗震與超高層結構工程的代表地標。",
+    "highlights": [
+      {
+        "label": "世界第一高樓期間",
+        "value": "2004–2009 年"
+      },
+      {
+        "label": "建築樓層數",
+        "value": "地上 101 層／地下 5 層"
+      },
+      {
+        "label": "全棟電梯總數",
+        "value": "61 座"
+      }
+    ],
+    "sourceTitle": "維基百科：台北101",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E5%8F%B0%E5%8C%97101"
+  },
+  {
+    "id": "f41",
+    "category": "biology",
+    "title": "小貓熊也有類似大貓熊的「假拇指」，但最初其實是為了爬樹演化的",
+    "body": "小貓熊與大貓熊雖然名字相近、都愛吃竹子，甚至各自演化出由腕骨特化而成的「假拇指」，但西班牙化石研究顯示，小貓熊祖先的假拇指原本是為了適應樹棲攀爬運動而演化，而非像大貓熊那樣為了抓握竹子，被視為脊椎動物「趨同演化」的經典案例。此外，杭州動物園曾有一隻小貓熊越獄出走長達 242 天，最後在西湖邊找回時毛色竟比在園內時更加鮮亮。",
+    "highlights": [
+      {
+        "label": "演化現象",
+        "value": "脊椎動物趨同演化"
+      },
+      {
+        "label": "假拇指原始用途",
+        "value": "適應樹棲攀爬"
+      },
+      {
+        "label": "杭州越獄最長紀錄",
+        "value": "在外存活 242 天"
+      }
+    ],
+    "sourceTitle": "維基百科：小貓熊屬",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E5%B0%8F%E7%86%8A%E7%8C%AB%E5%B1%9E"
+  },
+  {
+    "id": "f42",
+    "category": "space",
+    "title": "木星大紅斑風速高達 432 km/h，正逐漸縮小並可能於 2040 年變圓",
+    "body": "位於木星赤道以南 22° 的大紅斑，是太陽系規模最大的反氣旋風暴，風暴速度高達每小時 432 公里。人類自 1831 年起便持續觀測它超過 190 年（若與 1665 至 1713 年的歷史觀測為同一風暴，則已存在逾 360 年）。2004 年初它的直徑仍有約 40,000 公里（約 3 倍地球直徑），但觀測顯示它正持續縮小，天文學家推測約在 2040 年可能由橢圓形縮成正圓形。",
+    "highlights": [
+      {
+        "label": "風暴最高風速",
+        "value": "432 km/h"
+      },
+      {
+        "label": "2004 年初直徑",
+        "value": "約 40,000 公里（3 倍地球）"
+      },
+      {
+        "label": "推測變為正圓年份",
+        "value": "約 2040 年"
+      }
+    ],
+    "sourceTitle": "維基百科：大紅斑",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E5%A4%A7%E7%B4%85%E6%96%91"
+  },
+  {
+    "id": "f43",
+    "category": "space",
+    "title": "月球正以每年 3.8 公分的速度遠離地球，每秒距離變化可達 75 公尺",
+    "body": "地球與月球的平均距離約為 384,399 公里，但因為月球軌道並非正圓形，實際地月距離每秒變化可達 75 公尺，短短 6 小時內變化就能超過 1,000 公里。同時受潮汐作用影響，月球正以平均每年 3.8 公分（1.5 英寸）的速度螺旋遠離地球；理論上要等到約 500 億年後兩者才會達成雙向潮汐鎖定，比太陽系的壽命還要長。",
+    "highlights": [
+      {
+        "label": "地月平均距離",
+        "value": "384,399 公里"
+      },
+      {
+        "label": "每年遠離速度",
+        "value": "約 3.8 公分"
+      },
+      {
+        "label": "即時距離變化率",
+        "value": "最高每秒 75 公尺"
+      }
+    ],
+    "sourceTitle": "維基百科：地月距離",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E5%9C%B0%E6%9C%88%E8%B7%9D%E9%9B%A2"
+  },
+  {
+    "id": "f44",
+    "category": "history",
+    "title": "掩埋龐貝城的維蘇威火山爆發，釋放熱能估計相當於 6,000 枚原子彈",
+    "body": "西元 79 年義大利維蘇威火山劇烈噴發，將龐貝城掩埋在厚達 4 至 6 公尺的火山灰與浮石之下，爆發釋放的熱能估計相當於約 6,000 枚小男孩原子彈總和（沙皇炸彈能量的兩倍）。現存唯一目擊紀錄，來自當時僅 17 歲的小普林尼在 25 年後寫給歷史學家塔西佗的兩封信；而近年出土的銅幣與考古證據更顯示，實際爆發日期可能晚於 9 月初，以 10 月 24 日為主要候選日。",
+    "highlights": [
+      {
+        "label": "估算釋放熱能",
+        "value": "約 6,000 枚小男孩原子彈"
+      },
+      {
+        "label": "龐貝火山灰厚度",
+        "value": "4 至 6 公尺"
+      },
+      {
+        "label": "唯一目擊紀錄作者",
+        "value": "當時 17 歲的小普林尼"
+      }
+    ],
+    "sourceTitle": "維基百科：西元79年維蘇威火山爆發",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E8%A5%BF%E5%85%8379%E5%B9%B4%E7%B6%AD%E8%98%87%E5%A8%81%E7%81%AB%E5%B1%B1%E7%88%86%E7%99%BC"
+  },
+  {
+    "id": "f45",
+    "category": "history",
+    "title": "羅塞塔石碑用三種文字刻寫同一段詔書，成為破譯古埃及文的鑰匙",
+    "body": "刻於西元前 196 年、1799 年被發掘出土的羅塞塔石碑，材質為閃長岩（尺寸 112.3×75.7×28.4 公分），現藏於大英博物館。石碑由上至下分別以古埃及象形文字、世俗體與古希臘文字三種書寫系統刻錄同一段國王詔書，讓法國學者商博良得以在 1822 至 1824 年間成功對照破譯失傳千年的古埃及象形文字。",
+    "highlights": [
+      {
+        "label": "石碑刻製年代",
+        "value": "西元前 196 年"
+      },
+      {
+        "label": "三種並列文字",
+        "value": "象形文、世俗體、古希臘文"
+      },
+      {
+        "label": "關鍵破譯年份",
+        "value": "1822–1824 年（商博良）"
+      }
+    ],
+    "sourceTitle": "維基百科：羅塞塔石碑",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E7%BE%85%E5%A1%9E%E5%A1%94%E7%9F%B3%E7%A2%91"
+  },
+  {
+    "id": "f46",
+    "category": "culture",
+    "title": "梵谷《星夜》裡的天空漩渦，竟暗藏真實流體力學的「湍流」特徵",
+    "body": "梵谷於 1889 年 6 月自願入住法國聖雷米精神病院期間繪製了《星夜》（尺寸 74×93 公分，1941 年起永久收藏於紐約現代藝術博物館 MoMA），他在院內駐留 108 天便創作了 150 多幅油畫。現代物理研究分析畫作亮度結構後，發現天空中戲劇化的漩渦竟然符合流體力學的「湍流」特徵；2004 年 NASA 與歐洲太空總署（ESA）也指出，哈伯望遠鏡拍下的「麒麟座 V838」星雲與《星夜》極為神似。",
+    "highlights": [
+      {
+        "label": "創作年份與地點",
+        "value": "1889 年 6 月・法國聖雷米"
+      },
+      {
+        "label": "駐院 108 天產量",
+        "value": "超過 150 幅油畫"
+      },
+      {
+        "label": "科學界驚人發現",
+        "value": "漩渦具物理「湍流」結構"
+      }
+    ],
+    "sourceTitle": "維基百科：星夜",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E6%98%9F%E5%A4%9C"
+  },
+  {
+    "id": "f47",
+    "category": "tech",
+    "title": "「藍牙」技術的名字，來自 10 世紀一顆牙齒變色的維京國王",
+    "body": "無線通訊技術「藍牙」（Bluetooth）的名稱，直接取自 10 世紀丹麥與挪威國王哈拉爾一世（統治期間約 958 至 986 年）。他因為有一顆壞死變色的牙齒，在古諾斯語中獲得了綽號「Blåtand」，直譯成英文正是 Bluetooth。現代電信業者便借用這位促成北歐統一的國王綽號，象徵能統一各類裝置連線標準的無線技術。",
+    "highlights": [
+      {
+        "label": "命名原型人物",
+        "value": "丹麥與挪威國王哈拉爾一世"
+      },
+      {
+        "label": "古諾斯語綽號",
+        "value": "Blåtand（藍牙）"
+      },
+      {
+        "label": "綽號真正由來",
+        "value": "一顆壞死變色的牙齒"
+      }
+    ],
+    "sourceTitle": "維基百科：藍牙哈拉爾",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E8%97%8D%E7%89%99%E5%93%88%E6%8B%89%E7%88%BE"
+  },
+  {
+    "id": "f48",
+    "category": "food",
+    "title": "辣椒演化出辣椒素是為了防哺乳動物，卻讓鳥類吃起來完全不辣",
+    "body": "吃辣時的灼熱感其實不是化學燒傷，而是辣椒素結合了哺乳動物的 TRPV1 熱痛覺離子通道，讓大腦誤以為口腔遭到高溫灼傷。然而一般鳥類的 TRPV1 通道對辣椒素並不敏感，因此辣椒演化出辣椒素，剛好能阻止會咬碎種子的哺乳動物啃食，同時讓能完整吞下並靠飛翔散播種子的鳥類安心享用；辣度則以史高維爾指數衡量。",
+    "highlights": [
+      {
+        "label": "觸發的人體受體",
+        "value": "TRPV1 熱痛覺離子通道"
+      },
+      {
+        "label": "鳥類吃辣椒感受",
+        "value": "TRPV1 不敏感・幾乎無辣感"
+      },
+      {
+        "label": "辣度衡量單位",
+        "value": "史高維爾指數"
+      }
+    ],
+    "sourceTitle": "維基百科：辣椒素",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E8%BE%A3%E6%A4%92%E7%B4%A0"
+  },
+  {
+    "id": "f49",
+    "category": "food",
+    "title": "巧克力中的「可可鹼」人類無害，對貓狗卻具強烈神經毒性",
+    "body": "1878 年首度從可可樹種子中提取出的「可可鹼」，與咖啡因同屬於甲基黃嘌呤類化合物，也是茶鹼的同分異構體。人類可以順利代謝可可鹼，但貓狗等伴侶動物的代謝機制不同，可可鹼（以及茶飲中的茶鹼與咖啡因）對牠們的神經系統具有強烈毒性，因此絕不可餵食貓狗任何巧克力或茶類製品。",
+    "highlights": [
+      {
+        "label": "首次提取年份",
+        "value": "1878 年（可可樹種子）"
+      },
+      {
+        "label": "化學家族歸屬",
+        "value": "甲基黃嘌呤類／茶鹼同分異構體"
+      },
+      {
+        "label": "寵物安全警示",
+        "value": "對貓狗具強烈神經毒性"
+      }
+    ],
+    "sourceTitle": "維基百科：可可鹼",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E5%8F%AF%E5%8F%AF%E7%A2%B1"
+  },
+  {
+    "id": "f50",
+    "category": "geography",
+    "title": "地球最深處「挑戰者深淵」水壓是海面 1,100 倍，底部竟發現塑膠袋",
+    "body": "位於西北太平洋馬里亞納海溝最深處的挑戰者深淵，深度約 11,000 公尺（比聖母峰高出海平面的高度還要深），水壓高達海平面的 1,100 倍。好萊塢導演詹姆斯·卡麥隆曾於 2012 年 3 月 26 日獨自潛至 10,898 公尺；而 2019 年探險家維斯科沃潛至 10,928 公尺時，竟在地球最深的海床上目擊了人類丟棄的塑膠袋與糖果包裝紙。",
+    "highlights": [
+      {
+        "label": "海溝最深約略深度",
+        "value": "約 11,000 公尺"
+      },
+      {
+        "label": "海底水壓倍數",
+        "value": "海平面的 1,100 倍"
+      },
+      {
+        "label": "2019 年深海目擊",
+        "value": "10,928 公尺處發現塑膠垃圾"
+      }
+    ],
+    "sourceTitle": "維基百科：挑戰者深淵",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E6%8C%91%E6%88%98%E8%80%85%E6%B7%B1%E6%B8%8A"
+  },
+  {
+    "id": "f51",
+    "category": "food",
+    "title": "珍珠奶茶曾打了 10 年發明權官司，法院判無法申請專利反讓它紅遍全球",
+    "body": "1980 年代誕生於台灣的珍珠奶茶，長年存在台中春水堂與台南翰林茶館兩大始祖之爭。雙方為此在法院纏訟長達 10 年，最終台灣法院判決珍珠奶茶屬於新型飲料而非專利商品，雙方皆無法取得專利或商標權；也正因無人壟斷配方，讓全台手搖飲店百花齊放。2020 年 1 月 29 日，珍珠奶茶正式獲收錄為 Unicode 表情符號「🧋」（U+1F9CB）。",
+    "highlights": [
+      {
+        "label": "始祖訴訟歷時",
+        "value": "10 年（判決非專利商品）"
+      },
+      {
+        "label": "Unicode 表情符號",
+        "value": "2020 年收錄 🧋（U+1F9CB）"
+      },
+      {
+        "label": "英文 bubble 原意",
+        "value": "雪克杯手搖產生的茶泡"
+      }
+    ],
+    "sourceTitle": "維基百科：珍珠奶茶",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E7%8F%8D%E7%8F%A0%E5%A5%B6%E8%8C%B6"
+  },
+  {
+    "id": "f52",
+    "category": "biology",
+    "title": "全球六種琵鷺中唯有「黑面琵鷺」瀕危，台語稱作「烏面抐桮」",
+    "body": "黑面琵鷺因扁平如湯匙與樂器琵琶的長嘴得名，台語親切稱作「烏面抐桮」，賞鳥界則常暱稱為「黑琵」或「黑面舞者」。全世界琵鷺亞科共有六種鳥類，其中僅有黑面琵鷺屬於全球瀕危物種，且僅分布於東亞與東南亞地區，每年 1 至 3 月度冬期間，台灣台南七股曾文溪口等地都是國際觀鳥界極為重視的度冬棲地。",
+    "highlights": [
+      {
+        "label": "全球琵鷺總種數",
+        "value": "6 種（唯一瀕危為黑面琵鷺）"
+      },
+      {
+        "label": "台灣在地台語稱呼",
+        "value": "烏面抐桮"
+      },
+      {
+        "label": "主要度冬觀測期",
+        "value": "每年 1 月至 3 月"
+      }
+    ],
+    "sourceTitle": "維基百科：黑面琵鷺",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E9%BB%91%E8%84%B8%E7%90%B5%E9%B9%AD"
+  },
+  {
+    "id": "f53",
+    "category": "tech",
+    "title": "每天都在掃的 QR 碼，其實是 1994 年為追蹤汽車零件發明的",
+    "body": "QR 碼（Quick Response Code，快速回應圖碼）於 1994 年由日本汽車零組件大廠電裝公司（DENSO）工程師原昌宏所發明。相較於傳統一維條碼需要直線對準掃描器、資料容量也有限，QR 碼採用四種標準化編碼模式儲存大量資訊，且能從任意角度快速讀取，最初用於汽車工廠零件追蹤，如今已普及至全球行動支付與生活各角落。",
+    "highlights": [
+      {
+        "label": "發明年份與發明人",
+        "value": "1994 年・日本電裝原昌宏"
+      },
+      {
+        "label": "英文縮寫全名",
+        "value": "Quick Response（快速反應）"
+      },
+      {
+        "label": "最初應用場景",
+        "value": "汽車零組件追蹤與管理"
+      }
+    ],
+    "sourceTitle": "維基百科：QR碼",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/QR%E7%A2%BC"
+  },
+  {
+    "id": "f54",
+    "category": "geography",
+    "title": "南極洲是全球平均海拔最高的洲，竟儲存了全世界約 70% 的淡水",
+    "body": "南極洲面積約 1,400 萬平方公里，是唯一橫跨地球所有經線的大洲。除了南極半島最北端外，全洲約 98% 地區被平均厚度 1.9 公里的冰層覆蓋，這使它成為世界上平均海拔最高的洲（2,350 公尺），同時封存了全世界約 90% 的冰與 70% 的淡水。這裡沿岸年降水量僅約 200 毫米，1983 年更曾觀測到攝氏 -89.2℃ 的極端低溫。",
+    "highlights": [
+      {
+        "label": "全球淡水占比",
+        "value": "約 70%（全球冰量約 90%）"
+      },
+      {
+        "label": "全洲平均海拔",
+        "value": "2,350 公尺（世界最高）"
+      },
+      {
+        "label": "冰層平均厚度",
+        "value": "約 1.9 公里（覆蓋率 98%）"
+      }
+    ],
+    "sourceTitle": "維基百科：南極洲",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E5%8D%97%E6%9E%81%E6%B4%B2"
+  },
+  {
+    "id": "f55",
+    "category": "history",
+    "title": "古夫金字塔完工後，整整保持「世界最高建築」紀錄超過 3,800 年",
+    "body": "位於埃及的古夫金字塔（又稱吉薩大金字塔）建於約西元前 2560 年，耗時約 10 至 20 年完成，是古代世界七大奇蹟中唯一尚存的建築。它原始高度達 146.59 公尺、底邊長 230.37 公尺，在完工後的 3,800 多年間始終穩居世界最高建築物寶座；原本外觀還覆蓋一層光滑的外包石塊，今日我們看到的階梯狀岩層其實是內部的核心結構。",
+    "highlights": [
+      {
+        "label": "完工年代",
+        "value": "約西元前 2560 年"
+      },
+      {
+        "label": "原始建造高度",
+        "value": "146.59 公尺"
+      },
+      {
+        "label": "蟬聯世界最高紀錄",
+        "value": "超過 3,800 年"
+      }
+    ],
+    "sourceTitle": "維基百科：古夫金字塔",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E8%83%A1%E5%A4%AB%E9%87%91%E5%AD%97%E5%A1%94"
+  },
+  {
+    "id": "f56",
+    "category": "culture",
+    "title": "阿里山林業鐵路是台灣第一個重要文化景觀，火車會螺旋環繞獨立山爬升",
+    "body": "阿里山林業鐵路於日治時期為了向外輸送阿里山林場木材而興建，後來轉型為客運與觀光登山鐵路，不僅是台灣第一個重要文化景觀，也被列為 18 處台灣世界遺產潛力點之一。為了克服陡峭山勢，路線設計出獨特的「螺旋型環繞獨立山」登山工法，從嘉義車站一路蜿蜒爬升至海拔超過 2,000 公尺的阿里山山區。",
+    "highlights": [
+      {
+        "label": "文化資產地位",
+        "value": "台灣首座重要文化景觀"
+      },
+      {
+        "label": "著名登山工法",
+        "value": "螺旋型環繞獨立山"
+      },
+      {
+        "label": "最初興建目的",
+        "value": "日治時期輸送林場木材"
+      }
+    ],
+    "sourceTitle": "維基百科：阿里山林業鐵路",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E9%98%BF%E9%87%8C%E5%B1%B1%E6%9E%97%E6%A5%AD%E9%90%B5%E8%B7%AF"
+  },
+  {
+    "id": "f57",
+    "category": "science",
+    "title": "玻璃既非典型晶體也非液體，而是分子凍結在液態排布的「非晶質固體」",
+    "body": "許多人聽過「玻璃其實是流動極慢的液體」，但物理學上玻璃其實屬於呈玻璃態的「無定形體（非晶質固體）」。熔解後的玻璃因迅速冷卻（過冷），分子來不及排列成規則晶體就被凍結在類似液態的無序排布狀態。最常見的鈉鈣玻璃含約 75% 二氧化矽，日常環境中化學性質穩定且一般不溶於酸，但會被氫氟酸腐蝕生成四氟化矽（SiF4）。",
+    "highlights": [
+      {
+        "label": "物理學正確分類",
+        "value": "無定形體（非晶質固體）"
+      },
+      {
+        "label": "鈉鈣玻璃主要成分",
+        "value": "約 75% 二氧化矽"
+      },
+      {
+        "label": "罕見腐蝕溶劑",
+        "value": "氫氟酸（生成 SiF4）"
+      }
+    ],
+    "sourceTitle": "維基百科：玻璃",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E7%8E%BB%E7%92%83"
+  },
+  {
+    "id": "f58",
+    "category": "tech",
+    "title": "維基百科最初只是另一個計畫的「支線」，現存最早條目竟然叫「UuU」",
+    "body": "全球最大的自由線上百科全書「維基百科」正式上線於 2001 年 1 月 15 日，但它最初其實是為了支援前身計畫 Nupedia 而建立的「支線」Wiki 站點，當時還一度引發部分 Nupedia 編輯反彈。Wikipedia 一詞由共同創辦人兼主編拉里·桑格命名，而維基百科現存最早的條目是建立於 2001 年 1 月 16 日 UTC 21:08 的「UuU」。",
+    "highlights": [
+      {
+        "label": "正式上線日期",
+        "value": "2001 年 1 月 15 日"
+      },
+      {
+        "label": "原始前身計畫",
+        "value": "Nupedia 的支線 Wiki"
+      },
+      {
+        "label": "現存最早條目名稱",
+        "value": "UuU（2001/1/16 建立）"
+      }
+    ],
+    "sourceTitle": "維基百科：維基百科歷史",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E5%8E%86%E5%8F%B2"
+  },
+  {
+    "id": "f59",
+    "category": "biology",
+    "title": "世界最小的鳥「吸蜜蜂鳥」僅重 1.8 公克，90% 食物來自花蜜",
+    "body": "蜂鳥科是地球上體型最小的鳥類類群，共約 366 個物種，其中吸蜜蜂鳥體長僅約 5 公分、體重只有 1.8 公克，是全世界最小的鳥類。牠們英文名為 hummingbird，正是因為快速振翅懸停於空中吸食花蜜時，會發出宛如蜜蜂般的嗡嗡聲（humming）；蜂鳥有高達 90% 的食物來源是花蜜，並輔以小型昆蟲補充營養。",
+    "highlights": [
+      {
+        "label": "吸蜜蜂鳥體重",
+        "value": "僅 1.8 公克（體長 5 公分）"
+      },
+      {
+        "label": "花蜜飲食占比",
+        "value": "高達 90%"
+      },
+      {
+        "label": "英文名稱由來",
+        "value": "振翅發出嗡嗡聲（humming）"
+      }
+    ],
+    "sourceTitle": "維基百科：蜂鳥",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E8%9C%82%E9%B8%9F"
+  },
+  {
+    "id": "f60",
+    "category": "science",
+    "title": "閃電峰值電流達數萬安培，但整道放電過程竟然只持續幾十微秒",
+    "body": "閃電是對流層大氣放電現象：當雲層與空氣微粒不斷摩擦累積正負電荷，局部電壓達到空氣的擊穿電壓時，原本絕緣的空氣會發生電擊穿轉變為電漿體，讓高達數萬安培的峰值電流瞬間通過。雖然瞬間功率極大、並將空氣急劇加熱膨脹而產生雷聲，但閃電的持續時間極短，一般只有幾十微秒（百萬分之幾十秒）。",
+    "highlights": [
+      {
+        "label": "峰值電流強度",
+        "value": "高達數萬安培"
+      },
+      {
+        "label": "放電持續時間",
+        "value": "一般僅幾十微秒"
+      },
+      {
+        "label": "雷聲產生原理",
+        "value": "電流急劇加熱空氣膨脹"
+      }
+    ],
+    "sourceTitle": "維基百科：閃電",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E9%97%AA%E7%94%B5"
+  },
+  {
+    "id": "f61",
+    "category": "biology",
+    "title": "台灣黑熊胸前的 V 字白紋太魯閣語叫 rabang，活動範圍廣達 560 平方公里",
+    "body": "臺灣黑熊是台灣唯一的原生熊類，也是亞洲黑熊的台灣特有亞種，胸前醒目的 V 字型白色條紋在太魯閣語中稱為「rabang」。牠們主要棲息於中央山脈海拔 1,000 至 3,500 公尺的山區，單隻活動範圍最廣可達 560 平方公里；現存野外族群估計僅約 200 至 600 隻，已於 1989 年依《野生動物保育法》列為瀕危物種。",
+    "highlights": [
+      {
+        "label": "胸前白紋太魯閣語",
+        "value": "rabang"
+      },
+      {
+        "label": "現存野外族群估計",
+        "value": "約 200–600 隻"
+      },
+      {
+        "label": "最大活動範圍",
+        "value": "可達 560 平方公里"
+      }
+    ],
+    "sourceTitle": "維基百科：臺灣黑熊",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E5%8F%B0%E7%81%A3%E9%BB%91%E7%86%8A"
+  },
+  {
+    "id": "f62",
+    "category": "science",
+    "title": "夜晚強月光下會出現罕見「月虹」，但在人眼看來幾乎是全白色的",
+    "body": "彩虹是太陽光經半空中水滴折射與全內反射發生色散的結果，其連續光譜其實能細分為無數種顏色，不同文化常解讀為 3 到 9 種色帶。除了白天的彩虹外，在月光強烈的夜晚與充滿水霧的空域也可能出現罕見的「月虹（晚虹）」；雖然它同樣具有光譜色彩，但因人眼在低光線環境下難以辨識顏色，肉眼看到的月虹幾乎呈現全白色。",
+    "highlights": [
+      {
+        "label": "夜間罕見現象",
+        "value": "月虹（晚虹）"
+      },
+      {
+        "label": "人眼所見月虹顏色",
+        "value": "幾乎呈現全白色"
+      },
+      {
+        "label": "不同文化色帶分法",
+        "value": "3 至 9 種顏色不等"
+      }
+    ],
+    "sourceTitle": "維基百科：彩虹",
+    "sourceUrl": "https://zh.wikipedia.org/zh-tw/%E5%BD%A9%E8%99%B9"
   }
 ];
     let FACTS = FALLBACK_FACTS.slice();
@@ -703,6 +2088,10 @@
       darkMode: loadStorage('dt_dark_v1', false),
       modalFactId: null,
       installModalOpen: false,
+      readStatusFilter: 'all',
+      fontSize: loadStorage('dt_font_size_v1', 'normal'),
+      quizStats: loadStorage('dt_quiz_stats_v1', { played: 0, bestScore: 0, perfectCount: 0, totalCorrect: 0 }),
+      quizSession: null,
       lastKnownDateKey: '',
       liveMode: 'onthisday',
       liveLoading: false,
@@ -1347,6 +2736,7 @@
 
       document.getElementById('viewToday').classList.toggle('hidden', state.activeTab !== 'today');
       document.getElementById('viewExplore').classList.toggle('hidden', state.activeTab !== 'explore');
+      document.getElementById('viewQuiz').classList.toggle('hidden', state.activeTab !== 'quiz');
       document.getElementById('viewSaved').classList.toggle('hidden', state.activeTab !== 'saved');
     }
 
@@ -1520,18 +2910,29 @@
       }).join('');
       chipsEl.innerHTML = allBtn + catBtns;
 
+      // Status Filter Buttons
+      document.querySelectorAll('.status-filter-btn').forEach(btn => {
+        const active = btn.dataset.statusFilter === state.readStatusFilter;
+        btn.className = active
+          ? 'status-filter-btn px-3 py-1 rounded-lg text-xs font-bold bg-white dark:bg-slate-900 text-stone-900 dark:text-white shadow-sm transition-all'
+          : 'status-filter-btn px-3 py-1 rounded-lg text-xs font-medium text-stone-500 dark:text-slate-400 hover:text-stone-900 dark:hover:text-white transition-all';
+      });
+
       // Filter Facts
       const q = state.searchQuery.trim().toLowerCase();
       const filtered = FACTS.filter(f => {
         const matchCat = state.selectedCategory === 'all' || f.category === state.selectedCategory;
         if (!matchCat) return false;
+        const isLearned = state.learned.includes(f.id);
+        if (state.readStatusFilter === 'unread' && isLearned) return false;
+        if (state.readStatusFilter === 'learned' && !isLearned) return false;
         if (!q) return true;
         const catName = CATEGORIES[f.category].name.toLowerCase();
         return f.title.toLowerCase().includes(q) || f.body.toLowerCase().includes(q) || catName.includes(q);
       });
 
       document.getElementById('exploreResultCount').textContent = `顯示 ${filtered.length} / ${FACTS.length} 則冷知識`;
-      document.getElementById('clearFiltersBtn').classList.toggle('hidden', state.selectedCategory === 'all' && !q);
+      document.getElementById('clearFiltersBtn').classList.toggle('hidden', state.selectedCategory === 'all' && state.readStatusFilter === 'all' && !q);
 
       const grid = document.getElementById('exploreGrid');
       if (filtered.length === 0) {
@@ -1557,13 +2958,18 @@
       const learnedCount = state.learned.length;
       const streakCount = (state.streak && state.streak.count) || 1;
       const exploredCats = new Set(FACTS.filter(f => state.learned.includes(f.id)).map(f => f.category)).size;
+      const qStats = state.quizStats || { played: 0, bestScore: 0, perfectCount: 0 };
       const badges = [
         { icon: 'sparkles', title: '知識啟程', desc: '讀完第 1 則冷知識', unlocked: learnedCount >= 1 },
         { icon: 'flame', title: '三日打卡王', desc: '連續造訪 3 天', unlocked: streakCount >= 3 },
+        { icon: 'calendar-check', title: '七日連勝', desc: '連續造訪 7 天', unlocked: streakCount >= 7 },
         { icon: 'compass', title: '跨界探索者', desc: '探索 4 個以上領域', unlocked: exploredCats >= 4 },
         { icon: 'bookmark-check', title: '珍藏行家', desc: '收藏 5 則以上冷知識', unlocked: state.favorites.length >= 5 },
         { icon: 'trophy', title: '全領域制霸', desc: '8 大領域皆有閱讀紀錄', unlocked: exploredCats >= 8 },
-        { icon: 'crown', title: '冷知識博士', desc: '探索超過 20 則冷知識', unlocked: learnedCount >= 20 }
+        { icon: 'zap', title: '快問快答新手', desc: '完成第 1 次 5 題挑戰', unlocked: qStats.played >= 1 },
+        { icon: 'medal', title: '滿分傳說', desc: '快問快答獲得 5 / 5 滿分', unlocked: qStats.perfectCount >= 1 || qStats.bestScore >= 5 },
+        { icon: 'crown', title: '冷知識博士', desc: '探索超過 20 則冷知識', unlocked: learnedCount >= 20 },
+        { icon: 'library', title: '百科全書級', desc: '探索超過 50 則冷知識', unlocked: learnedCount >= 50 }
       ];
       const unlockedNum = badges.filter(b => b.unlocked).length;
       const bCountEl = document.getElementById('badgeUnlockedCount');
@@ -1657,10 +3063,265 @@
       );
     }
 
+    // v2.5.0: Font Size Accessibility
+    function applyFontSize() {
+      const root = document.documentElement;
+      root.classList.remove('font-size-lg', 'font-size-xl');
+      const label = document.getElementById('fontSizeLabel');
+      if (state.fontSize === 'large') {
+        root.classList.add('font-size-lg');
+        if (label) label.textContent = 'A+';
+      } else if (state.fontSize === 'xlarge') {
+        root.classList.add('font-size-xl');
+        if (label) label.textContent = 'A++';
+      } else {
+        if (label) label.textContent = 'A';
+      }
+    }
+
+    // v2.5.0: 5-Question Interactive Quiz Engine
+    function startNewQuizSession() {
+      const shuffled = [...FACTS].sort(() => Math.random() - 0.5);
+      const selected = shuffled.slice(0, Math.min(5, shuffled.length));
+      const questions = selected.map(fact => {
+        const correctH = fact.highlights[0];
+        const correctText = `${correctH.label}：${correctH.value}`;
+        const distractorPool = FACTS
+          .filter(f => f.id !== fact.id && f.highlights && f.highlights.length > 0)
+          .sort(() => Math.random() - 0.5);
+        const distractors = [];
+        const usedVals = new Set([correctH.value, correctH.label]);
+        for (const df of distractorPool) {
+          if (distractors.length >= 3) break;
+          const dh = df.highlights[0];
+          if (!usedVals.has(dh.value) && !usedVals.has(dh.label)) {
+            usedVals.add(dh.value);
+            usedVals.add(dh.label);
+            distractors.push(`${dh.label}：${dh.value}`);
+          }
+        }
+        const options = [
+          { text: correctText, isCorrect: true },
+          ...distractors.map(t => ({ text: t, isCorrect: false }))
+        ].sort(() => Math.random() - 0.5);
+        return { fact, options, chosenIndex: null };
+      });
+      state.quizSession = {
+        questions,
+        currentIndex: 0,
+        score: 0,
+        finished: false
+      };
+      renderQuizView();
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function renderQuizView() {
+      const qStats = state.quizStats || { played: 0, bestScore: 0, perfectCount: 0, totalCorrect: 0 };
+      const bestEl = document.getElementById('quizBestScoreNum');
+      const playedEl = document.getElementById('quizPlayedNum');
+      if (bestEl) bestEl.textContent = `${qStats.bestScore || 0} / 5`;
+      if (playedEl) playedEl.textContent = `${qStats.played || 0} 次`;
+
+      const stage = document.getElementById('quizStageContainer');
+      if (!stage) return;
+
+      if (!state.quizSession) {
+        stage.innerHTML = `
+          <div class="rounded-2xl bg-stone-50 dark:bg-slate-800/60 border border-stone-200/80 dark:border-slate-700/70 p-6 sm:p-10 text-center space-y-4">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+              <i data-lucide="brain" class="w-7 h-7"></i>
+            </div>
+            <div class="space-y-1.5">
+              <h3 class="text-lg sm:text-xl font-extrabold text-stone-900 dark:text-white">準備好挑戰 5 題跨領域冷知識了嗎？</h3>
+              <p class="text-xs sm:text-sm text-stone-600 dark:text-slate-300 max-w-md mx-auto">系統將從 8 大領域、共 ${FACTS.length} 則維基百科查證題庫隨機抽題。每題作答後會立即揭曉解析與維基來源！</p>
+            </div>
+            <button type="button" id="startQuizBtn" class="min-h-[46px] px-7 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm sm:text-base inline-flex items-center gap-2 shadow-sm transition-colors">
+              <i data-lucide="play" class="w-4 h-4"></i>
+              <span>立即開始挑戰</span>
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      const sess = state.quizSession;
+      if (sess.finished) {
+        const total = sess.questions.length;
+        const pct = Math.round((sess.score / total) * 100);
+        let rankTitle = '再接再厲・好奇心暖身中';
+        if (sess.score === total) rankTitle = '滿分傳說・行走的百科全書！';
+        else if (sess.score >= 4) rankTitle = '知識達人・跨領域敏銳度滿點！';
+        else if (sess.score >= 3) rankTitle = '表現不錯・離滿分只差一步！';
+
+        stage.innerHTML = `
+          <div class="rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 p-6 sm:p-8 text-center space-y-4">
+            <div class="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">本回合挑戰結果</div>
+            <div class="text-4xl sm:text-5xl font-black text-stone-900 dark:text-white font-mono">${sess.score} <span class="text-2xl text-stone-400">/ ${total}</span></div>
+            <div class="text-base sm:text-lg font-extrabold text-amber-900 dark:text-amber-200">${rankTitle}</div>
+            <p class="text-xs sm:text-sm text-stone-600 dark:text-slate-300">正確率 ${pct}%・累積挑戰 ${qStats.played} 次・歷史最佳 ${qStats.bestScore} / 5</p>
+            <div class="flex flex-wrap items-center justify-center gap-2.5 pt-2">
+              <button type="button" id="restartQuizBtn" class="min-h-[44px] px-6 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold inline-flex items-center gap-2 transition-colors">
+                <i data-lucide="rotate-cw" class="w-4 h-4"></i>
+                <span>再挑戰一回合</span>
+              </button>
+              <button type="button" id="shareQuizScoreBtn" class="min-h-[44px] px-5 py-2 rounded-xl border border-stone-300 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700 text-stone-800 dark:text-slate-200 text-sm font-semibold inline-flex items-center gap-2 transition-colors">
+                <i data-lucide="share-2" class="w-4 h-4"></i>
+                <span>複製戰績分享</span>
+              </button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      const q = sess.questions[sess.currentIndex];
+      const cat = CATEGORIES[q.fact.category];
+      const answered = q.chosenIndex !== null;
+      const letters = ['A', 'B', 'C', 'D'];
+
+      stage.innerHTML = `
+        <div class="space-y-4">
+          <div class="flex items-center justify-between gap-2 text-xs sm:text-sm">
+            <span class="font-bold text-stone-700 dark:text-slate-200">第 ${sess.currentIndex + 1} / ${sess.questions.length} 題</span>
+            <span class="font-mono font-semibold text-amber-600 dark:text-amber-400">目前得分：${sess.score}</span>
+          </div>
+          <div class="w-full h-2 rounded-full bg-stone-200 dark:bg-slate-800 overflow-hidden">
+            <div class="h-full bg-amber-500 transition-all duration-300" style="width: ${((sess.currentIndex + (answered ? 1 : 0)) / sess.questions.length) * 100}%"></div>
+          </div>
+
+          <div class="rounded-2xl bg-stone-50 dark:bg-slate-800/60 border border-stone-200/80 dark:border-slate-700/70 p-4 sm:p-6 space-y-3">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold ${cat.pill}">
+              <i data-lucide="${cat.icon}" class="w-3.5 h-3.5"></i>
+              <span>${cat.name}</span>
+            </span>
+            <div class="text-xs text-stone-500 dark:text-slate-400 font-medium">以下哪一項關鍵數據對應這則冷知識？</div>
+            <h3 class="text-lg sm:text-xl font-extrabold text-stone-900 dark:text-white leading-snug">「${escapeHtml(q.fact.title)}」</h3>
+          </div>
+
+          <div class="grid grid-cols-1 gap-2.5">
+            ${q.options.map((opt, idx) => {
+              let cls = 'border-stone-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 hover:border-amber-400 dark:hover:border-amber-500 text-stone-800 dark:text-slate-100';
+              let iconHtml = '';
+              if (answered) {
+                if (opt.isCorrect) {
+                  cls = 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200';
+                  iconHtml = '<i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0"></i>';
+                } else if (idx === q.chosenIndex) {
+                  cls = 'border-rose-500 bg-rose-50 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200';
+                  iconHtml = '<i data-lucide="x-circle" class="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0"></i>';
+                } else {
+                  cls = 'border-stone-200/70 dark:border-slate-800 bg-stone-50/70 dark:bg-slate-900/40 text-stone-400 dark:text-slate-500 opacity-65';
+                }
+              }
+              return `
+                <button type="button" data-quiz-option="${idx}" ${answered ? 'disabled' : ''} class="min-h-[52px] w-full text-left px-4 py-3 rounded-xl border-2 font-semibold text-sm sm:text-base flex items-center justify-between gap-3 transition-all ${cls}">
+                  <span class="flex items-center gap-3 min-w-0">
+                    <span class="w-7 h-7 rounded-lg bg-stone-100 dark:bg-slate-700 text-stone-700 dark:text-slate-200 text-xs font-mono font-bold flex items-center justify-center shrink-0">${letters[idx]}</span>
+                    <span class="leading-snug">${escapeHtml(opt.text)}</span>
+                  </span>
+                  ${iconHtml}
+                </button>
+              `;
+            }).join('')}
+          </div>
+
+          ${answered ? `
+            <div class="rounded-2xl bg-stone-50 dark:bg-slate-800/70 border border-stone-200 dark:border-slate-700 p-4 sm:p-5 space-y-3 animate-card">
+              <div class="text-xs font-bold ${q.options[q.chosenIndex].isCorrect ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'}">
+                ${q.options[q.chosenIndex].isCorrect ? '答對了！完整冷知識解析：' : '差一點！完整冷知識解析：'}
+              </div>
+              <p class="text-xs sm:text-sm text-stone-700 dark:text-slate-300 leading-relaxed">${escapeHtml(q.fact.body)}</p>
+              <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+                <a href="${escapeHtml(q.fact.sourceUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:underline">
+                  <span>前往維基百科查證（${escapeHtml(q.fact.sourceTitle)}）</span>
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                </a>
+                <button type="button" id="quizNextQuestionBtn" class="min-h-[42px] px-5 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 text-xs sm:text-sm font-bold inline-flex items-center gap-1.5 transition-colors">
+                  <span>${sess.currentIndex + 1 < sess.questions.length ? '下一題 →' : '查看總成績 →'}</span>
+                </button>
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    // v2.5.0: Export / Import Progress JSON
+    function exportProgressJson() {
+      const payload = {
+        app: 'daily-trivia',
+        version: '2.5.0',
+        exportedAt: new Date().toISOString(),
+        learned: state.learned,
+        favorites: state.favorites,
+        streak: state.streak,
+        quizStats: state.quizStats,
+        fontSize: state.fontSize
+      };
+      try {
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `daily-trivia-backup-${getTodayKey()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('已匯出學習紀錄備份檔 (.json)');
+      } catch (e) {
+        showToast('匯出失敗，請稍後再試');
+      }
+    }
+
+    function importProgressJson(file) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(String(reader.result || ''));
+          if (!data || data.app !== 'daily-trivia') {
+            showToast('這不是有效的每日冷知識備份檔');
+            return;
+          }
+          if (Array.isArray(data.learned)) {
+            state.learned = Array.from(new Set([...state.learned, ...data.learned]));
+            saveStorage('dt_learned_v1', state.learned);
+          }
+          if (Array.isArray(data.favorites)) {
+            state.favorites = Array.from(new Set([...state.favorites, ...data.favorites]));
+            saveStorage('dt_favs_v1', state.favorites);
+          }
+          if (data.streak && typeof data.streak.count === 'number') {
+            if (!state.streak || data.streak.count > state.streak.count) {
+              state.streak = data.streak;
+              saveStorage('dt_streak_v1', state.streak);
+            }
+          }
+          if (data.quizStats && typeof data.quizStats.played === 'number') {
+            state.quizStats = {
+              played: Math.max((state.quizStats && state.quizStats.played) || 0, data.quizStats.played || 0),
+              bestScore: Math.max((state.quizStats && state.quizStats.bestScore) || 0, data.quizStats.bestScore || 0),
+              perfectCount: Math.max((state.quizStats && state.quizStats.perfectCount) || 0, data.quizStats.perfectCount || 0),
+              totalCorrect: Math.max((state.quizStats && state.quizStats.totalCorrect) || 0, data.quizStats.totalCorrect || 0)
+            };
+            saveStorage('dt_quiz_stats_v1', state.quizStats);
+          }
+          renderAll();
+          showToast('已成功合併並還原學習紀錄！');
+        } catch (err) {
+          showToast('檔案格式錯誤，無法還原');
+        }
+      };
+      reader.readAsText(file);
+    }
+
     function renderAll() {
       renderNavigation();
       renderTodayView();
       renderExploreView();
+      renderQuizView();
       renderSavedView();
       renderModal();
       if (window.lucide) lucide.createIcons();
@@ -1684,6 +3345,7 @@
       setupDynamicManifest();
       updateDailyStreak();
       applyTheme();
+      applyFontSize();
       startCountdown();
       updateTotalCountLabels();
       renderAll();
@@ -1913,8 +3575,17 @@
         if (window.lucide) lucide.createIcons();
       });
 
+      document.getElementById('exploreStatusFilters').addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-status-filter]');
+        if (!btn) return;
+        state.readStatusFilter = btn.dataset.statusFilter;
+        renderExploreView();
+        if (window.lucide) lucide.createIcons();
+      });
+
       document.getElementById('clearFiltersBtn').addEventListener('click', () => {
         state.selectedCategory = 'all';
+        state.readStatusFilter = 'all';
         state.searchQuery = '';
         document.getElementById('searchInput').value = '';
         renderExploreView();
@@ -1970,6 +3641,104 @@
         if (fact) copyFactToClipboard(fact);
       });
 
+      // Font size toggle
+      document.getElementById('fontSizeToggleBtn').addEventListener('click', () => {
+        const order = ['normal', 'large', 'xlarge'];
+        const nextIdx = (order.indexOf(state.fontSize) + 1) % order.length;
+        state.fontSize = order[nextIdx];
+        saveStorage('dt_font_size_v1', state.fontSize);
+        applyFontSize();
+        const labels = { normal: '標準字體', large: '大字體', xlarge: '特大字體' };
+        showToast(`已切換為「${labels[state.fontSize]}」`);
+      });
+
+      // Quiz stage delegation
+      document.getElementById('quizStageContainer').addEventListener('click', (e) => {
+        if (e.target.closest('#startQuizBtn') || e.target.closest('#restartQuizBtn')) {
+          startNewQuizSession();
+          return;
+        }
+        const optBtn = e.target.closest('[data-quiz-option]');
+        if (optBtn && state.quizSession && !state.quizSession.finished) {
+          const q = state.quizSession.questions[state.quizSession.currentIndex];
+          if (q.chosenIndex !== null) return;
+          const idx = Number(optBtn.dataset.quizOption);
+          q.chosenIndex = idx;
+          if (q.options[idx] && q.options[idx].isCorrect) {
+            state.quizSession.score += 1;
+          }
+          renderQuizView();
+          if (window.lucide) lucide.createIcons();
+          return;
+        }
+        if (e.target.closest('#quizNextQuestionBtn') && state.quizSession) {
+          const sess = state.quizSession;
+          if (sess.currentIndex + 1 < sess.questions.length) {
+            sess.currentIndex += 1;
+          } else {
+            sess.finished = true;
+            const st = state.quizStats || { played: 0, bestScore: 0, perfectCount: 0, totalCorrect: 0 };
+            st.played = (st.played || 0) + 1;
+            st.bestScore = Math.max(st.bestScore || 0, sess.score);
+            st.totalCorrect = (st.totalCorrect || 0) + sess.score;
+            if (sess.score === sess.questions.length) {
+              st.perfectCount = (st.perfectCount || 0) + 1;
+            }
+            state.quizStats = st;
+            saveStorage('dt_quiz_stats_v1', st);
+            renderSavedView();
+          }
+          renderQuizView();
+          if (window.lucide) lucide.createIcons();
+          return;
+        }
+        if (e.target.closest('#shareQuizScoreBtn') && state.quizSession) {
+          const sess = state.quizSession;
+          const shareText = `我在「每日冷知識」快問快答拿下 ${sess.score} / ${sess.questions.length} 分！\n來測測你的跨領域知識力：https://kt-bot12.github.io/daily-trivia/`;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(shareText).then(() => showToast('已複製快問快答戰績！')).catch(() => showToast('複製失敗'));
+          } else {
+            showToast('已準備好戰績文字');
+          }
+        }
+      });
+
+      // Backup Export / Import
+      document.getElementById('exportProgressBtn').addEventListener('click', exportProgressJson);
+      document.getElementById('importProgressBtn').addEventListener('click', () => {
+        document.getElementById('importProgressFile').click();
+      });
+      document.getElementById('importProgressFile').addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (file) importProgressJson(file);
+        e.target.value = '';
+      });
+
+      // Touch Swipe on Today Card (Mobile left/right date switch)
+      let touchStartX = 0;
+      let touchStartY = 0;
+      const todayCardEl = document.getElementById('todayCard');
+      todayCardEl.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches.length === 1) {
+          touchStartX = e.touches[0].clientX;
+          touchStartY = e.touches[0].clientY;
+        }
+      }, { passive: true });
+      todayCardEl.addEventListener('touchend', (e) => {
+        if (!e.changedTouches || e.changedTouches.length !== 1) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        if (Math.abs(dx) > 65 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+          stopSpeaking();
+          state.overrideFactId = null;
+          state.dayOffset += dx < 0 ? 1 : -1;
+          renderTodayView();
+          if (state.liveMode === 'onthisday') loadLiveWikipediaForCurrentDate(false);
+          if (window.lucide) lucide.createIcons();
+        }
+      }, { passive: true });
+
+      // Keyboard Shortcuts (Desktop)
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
           if (state.modalFactId) {
@@ -1980,6 +3749,20 @@
             state.installModalOpen = false;
             document.getElementById('installModal').classList.add('hidden');
           }
+          return;
+        }
+        const tag = (e.target && e.target.tagName) || '';
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || state.modalFactId || state.installModalOpen) return;
+        if (state.activeTab !== 'today') return;
+
+        if (e.key === 'ArrowLeft') {
+          document.getElementById('prevDayBtn').click();
+        } else if (e.key === 'ArrowRight') {
+          document.getElementById('nextDayBtn').click();
+        } else if (e.key === 'r' || e.key === 'R') {
+          document.getElementById('randomFactBtn').click();
+        } else if (e.key === 's' || e.key === 'S') {
+          document.getElementById('todaySpeakBtn').click();
         }
       });
     });
