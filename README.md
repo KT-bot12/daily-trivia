@@ -16,7 +16,7 @@
 ```text
 .
 ├── index.html              # 主應用程式（響應式 UI、圖卡引擎、語音朗讀、成就系統）
-├── facts.json              # 獨立冷知識題庫（8 大領域 38 則，每則皆附維基百科連結）
+├── facts.json              # 獨立冷知識題庫（8 大領域 62 則，每則皆附維基百科連結）
 ├── manifest.json           # PWA 應用程式設定檔
 ├── sw.js                   # Service Worker 離線快取引擎
 ├── assets/
