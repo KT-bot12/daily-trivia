@@ -2,13 +2,15 @@
 
 支援電腦與手機安裝（PWA）的跨領域每日冷知識網頁應用程式，每天自動更新並附上可點擊查證的繁體中文維基百科連結。
 
+## 專案結構
+- `index.html`：前端網頁 App 主程式（載入 `facts.json` 並串接維基百科公開 API）。
+- `facts.json`：獨立冷知識題庫（目前收錄 8 大領域共 38 則已查證冷知識，每則皆附維基百科來源連結）。
+
 ## 功能特色
-- **每日自動切換**：每天午夜 00:00（或切回前景時）自動依日期切換跨領域冷知識，內建 8 大領域共 33 則已查證題庫。
+- **每日自動切換**：每天午夜 00:00（或切回前景時）自動依日期切換跨領域冷知識。
 - **維基百科即時每日新知**：連線維基百科官方公開 REST API，每天自動同步「歷史上的今天」並提供無限隨機新知（離線時自動退回內建題庫）。
 - **可靠來源查證**：每則冷知識皆附專屬繁體中文維基百科連結，一鍵核對原始條目與參考文獻。
 - **跨裝置 App 體驗**：響應式版面、深淺色主題切換、收藏與探索進度紀錄，並內建「安裝 App」指南與每日行事曆提醒（`.ics`）下載。
 
-## 如何透過 GitHub Pages 免費上線
-1. 在 GitHub 建立一個新的公開（Public）倉庫（例如 `daily-trivia`）。
-2. 點擊 **Add file → Upload files**，將解壓縮後的 `index.html` 與 `README.md` 拖曳上傳並點 **Commit changes**。
-3. 進入倉庫的 **Settings → Pages**，在 **Build and deployment → Branch** 選擇 `main` 與 `/ (root)` 後按 **Save**，等待約 1–2 分鐘即可透過 `https://<你的GitHub帳號>.github.io/<倉庫名稱>/` 開啟網站。
+## 如何新增冷知識
+日後只需在 `facts.json` 新增物件（包含 `id`、`category`、`title`、`body`、`highlights`、`sourceTitle`、`sourceUrl`），透過新分支提交 Pull Request 並合併進 `main`，GitHub Pages 即會自動更新網站。
