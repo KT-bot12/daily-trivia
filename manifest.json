@@ -1,0 +1,26 @@
+{
+  "name": "每日冷知識・Daily Trivia",
+  "short_name": "每日冷知識",
+  "description": "每天自動更新一則跨領域冷知識與維基百科歷史上的今天，附可靠來源查證連結，支援離線瀏覽與精美圖卡分享。",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#fafaf9",
+  "theme_color": "#f59e0b",
+  "lang": "zh-Hant",
+  "icons": [
+    {
+      "src": "./assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
