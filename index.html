@@ -1,0 +1,1960 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>每日冷知識・Daily Trivia｜跨領域知識與維基百科查證</title>
+  <meta name="description" content="每天自動更新一則跨領域冷知識與維基百科歷史上的今天，附可靠來源查證連結，支援電腦與手機安裝使用。" />
+  <meta name="theme-color" content="#f59e0b" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="每日冷知識" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23f59e0b'/%3E%3Cpath d='M32 14l4.2 11.8L48 30l-11.8 4.2L32 46l-4.2-11.8L16 30l11.8-4.2z' fill='white'/%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23f59e0b'/%3E%3Cpath d='M90 36l12 34 34 12-34 12-12 34-12-34-34-12 34-12z' fill='white'/%3E%3C/svg%3E" />
+  <link id="pwaManifestLink" rel="manifest" href="" />
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Inter"', '"Noto Sans TC"', '"PingFang TC"', '"Microsoft JhengHei"', 'system-ui', '-apple-system', 'sans-serif'],
+            serif: ['"Noto Serif TC"', 'Georgia', 'serif']
+          }
+        }
+      }
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <style>
+    body {
+      font-family: "Inter", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, -apple-system, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-card {
+      animation: fadeSlideUp 0.28s ease-out both;
+    }
+  </style>
+</head>
+<body class="bg-stone-50 text-stone-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen transition-colors duration-200 pb-24 sm:pb-12">
+
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-30 bg-stone-50/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-stone-200/80 dark:border-slate-800/80">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+      <!-- Brand -->
+      <button id="brandHomeBtn" type="button" class="flex items-center gap-2.5 text-left group focus:outline-none">
+        <span class="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </span>
+        <div>
+          <div class="text-base sm:text-lg font-bold tracking-tight leading-tight text-stone-900 dark:text-white">每日冷知識</div>
+          <div class="text-[11px] text-stone-500 dark:text-slate-400 leading-tight hidden xs:block sm:block">跨領域精選・維基百科查證</div>
+        </div>
+      </button>
+
+      <!-- Desktop Tabs -->
+      <nav aria-label="主要導覽" class="hidden sm:flex items-center gap-1 bg-stone-200/70 dark:bg-slate-900 p-1 rounded-xl border border-stone-200 dark:border-slate-800">
+        <button data-tab="today" type="button" class="nav-tab px-4 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5">
+          <i data-lucide="calendar-days" class="w-4 h-4"></i>
+          <span>今日精選</span>
+        </button>
+        <button data-tab="explore" type="button" class="nav-tab px-4 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5">
+          <i data-lucide="compass" class="w-4 h-4"></i>
+          <span>領域探索</span>
+        </button>
+        <button data-tab="saved" type="button" class="nav-tab px-4 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5">
+          <i data-lucide="bookmark" class="w-4 h-4"></i>
+          <span>我的收藏</span>
+          <span id="desktopSavedBadge" class="ml-0.5 text-xs px-1.5 py-0.5 rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-300 font-semibold">0</span>
+        </button>
+      </nav>
+
+      <!-- Right Controls -->
+      <div class="flex items-center gap-2">
+        <div class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200/70 dark:border-emerald-800/60 text-xs font-medium text-emerald-700 dark:text-emerald-300">
+          <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+          <span>已探索 <strong id="headerLearnedCount">0</strong> / 33</span>
+        </div>
+        <button id="installAppBtn" type="button" class="h-10 px-3 rounded-xl border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-800 dark:text-amber-300 text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 transition-colors">
+          <i data-lucide="smartphone" class="w-4 h-4"></i>
+          <span class="hidden xs:inline sm:inline">安裝 App</span>
+        </button>
+        <button id="themeToggleBtn" type="button" aria-label="切換深色或淺色主題" class="w-10 h-10 rounded-xl border border-stone-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-center text-stone-600 dark:text-slate-300 hover:bg-stone-100 dark:hover:bg-slate-800 transition-colors">
+          <i id="themeIcon" data-lucide="moon" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 pt-5 sm:pt-8">
+
+    <!-- VIEW 1: TODAY -->
+    <section id="viewToday" class="space-y-5">
+      <!-- Date Bar & Countdown -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 border border-stone-200/90 dark:border-slate-800 rounded-2xl px-4 py-3 shadow-sm">
+        <div class="flex items-center justify-between sm:justify-start gap-2">
+          <button id="prevDayBtn" type="button" aria-label="查看前一天" class="min-h-[40px] px-3 rounded-xl border border-stone-200 dark:border-slate-700 hover:bg-stone-100 dark:hover:bg-slate-800 text-stone-700 dark:text-slate-200 flex items-center gap-1 text-sm font-medium transition-colors">
+            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+            <span class="hidden xs:inline">前一天</span>
+          </button>
+          <div class="text-center sm:text-left px-2">
+            <div id="displayDateLabel" class="text-sm sm:text-base font-bold text-stone-900 dark:text-white">載入中...</div>
+            <div id="displayDayStatus" class="text-xs text-amber-600 dark:text-amber-400 font-medium">今日專屬冷知識</div>
+          </div>
+          <button id="nextDayBtn" type="button" aria-label="查看後一天" class="min-h-[40px] px-3 rounded-xl border border-stone-200 dark:border-slate-700 hover:bg-stone-100 dark:hover:bg-slate-800 text-stone-700 dark:text-slate-200 flex items-center gap-1 text-sm font-medium transition-colors">
+            <span class="hidden xs:inline">後一天</span>
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <div class="flex items-center justify-between sm:justify-end gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-stone-100 dark:border-slate-800">
+          <div class="flex items-center gap-1.5 text-xs text-stone-500 dark:text-slate-400 bg-stone-100 dark:bg-slate-800/80 px-3 py-1.5 rounded-lg">
+            <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-500"></i>
+            <span>明日更新</span>
+            <span id="countdownTimer" class="font-mono font-semibold text-stone-800 dark:text-slate-200">--:--:--</span>
+          </div>
+          <button id="backToTodayBtn" type="button" class="hidden min-h-[36px] px-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold transition-colors">
+            回到今日
+          </button>
+        </div>
+      </div>
+
+      <!-- Hero Trivia Card -->
+      <article id="todayCard" class="animate-card bg-white dark:bg-slate-900 border border-stone-200/90 dark:border-slate-800 rounded-3xl shadow-sm overflow-hidden">
+        <!-- Category Accent Top Strip -->
+        <div id="todayAccentBar" class="h-2 w-full bg-amber-500"></div>
+
+        <div class="p-5 sm:p-8 md:p-10 space-y-6">
+          <!-- Meta Row -->
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span id="todayCategoryPill" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs sm:text-sm font-semibold"></span>
+              <span id="todayIndexTag" class="text-xs font-mono text-stone-400 dark:text-slate-500">#01</span>
+            </div>
+            <span id="todayModeBadge" class="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full bg-stone-100 dark:bg-slate-800 text-stone-600 dark:text-slate-300">
+              <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-500"></i>
+              <span>已查證來源</span>
+            </span>
+          </div>
+
+          <!-- Title & Body -->
+          <div class="space-y-4">
+            <h1 id="todayTitle" class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white leading-snug"></h1>
+            <p id="todayBody" class="text-base sm:text-lg leading-relaxed text-stone-700 dark:text-slate-300"></p>
+          </div>
+
+          <!-- Key Highlights Chips -->
+          <div id="todayHighlights" class="grid grid-cols-1 sm:grid-cols-3 gap-2.5"></div>
+
+          <!-- Verified Wikipedia Source Box -->
+          <div class="rounded-2xl bg-stone-50 dark:bg-slate-800/70 border border-stone-200 dark:border-slate-700/80 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-xl bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-700 flex items-center justify-center shrink-0 font-serif font-bold text-lg text-stone-800 dark:text-slate-100 shadow-sm">
+                W
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                  <i data-lucide="badge-check" class="w-3.5 h-3.5"></i>
+                  <span>維基百科可靠來源查證</span>
+                </div>
+                <div id="todaySourceTitle" class="text-sm sm:text-base font-bold text-stone-900 dark:text-white truncate mt-0.5"></div>
+                <div class="text-xs text-stone-500 dark:text-slate-400 truncate">zh.wikipedia.org・內含完整參考文獻與歷史紀錄</div>
+              </div>
+            </div>
+            <a id="todaySourceLink" href="https://zh.wikipedia.org" target="_blank" rel="noopener noreferrer" class="min-h-[44px] px-5 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 font-semibold text-sm inline-flex items-center justify-center gap-2 transition-colors shrink-0 shadow-sm">
+              <span>前往維基百科查證</span>
+              <i data-lucide="external-link" class="w-4 h-4"></i>
+            </a>
+          </div>
+
+          <!-- Action Bar -->
+          <div class="pt-2 border-t border-stone-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-2">
+              <button id="todayLearnedBtn" type="button" class="min-h-[44px] px-4 py-2 rounded-xl border text-sm font-semibold inline-flex items-center gap-2 transition-all"></button>
+              <button id="todaySaveBtn" type="button" class="min-h-[44px] px-4 py-2 rounded-xl border text-sm font-semibold inline-flex items-center gap-2 transition-all"></button>
+              <button id="todayCopyBtn" type="button" class="min-h-[44px] px-4 py-2 rounded-xl border border-stone-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700 text-stone-700 dark:text-slate-200 text-sm font-semibold inline-flex items-center gap-2 transition-colors">
+                <i data-lucide="share-2" class="w-4 h-4"></i>
+                <span>複製分享</span>
+              </button>
+            </div>
+            <button id="randomFactBtn" type="button" class="min-h-[44px] w-full sm:w-auto px-5 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-800 dark:text-amber-300 border border-amber-500/30 text-sm font-bold inline-flex items-center justify-center gap-2 transition-colors">
+              <i data-lucide="shuffle" class="w-4 h-4"></i>
+              <span>隨機抽一則冷知識</span>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Live Auto-Updating Wikipedia Daily Feed -->
+      <section id="liveWikiSection" class="bg-white dark:bg-slate-900 border border-stone-200/90 dark:border-slate-800 rounded-3xl p-5 sm:p-6 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="space-y-0.5">
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>隨日期自動更新</span>
+              </span>
+              <span id="liveWikiDateBadge" class="text-xs font-mono text-stone-400 dark:text-slate-500"></span>
+            </div>
+            <h2 class="text-base sm:text-lg font-bold text-stone-900 dark:text-white flex items-center gap-1.5">
+              <i data-lucide="radio" class="w-4 h-4 text-emerald-500"></i>
+              <span>維基百科即時每日新知</span>
+            </h2>
+          </div>
+
+          <div class="flex items-center gap-1.5 bg-stone-100 dark:bg-slate-800 p-1 rounded-xl self-start sm:self-auto">
+            <button id="liveModeOnThisDayBtn" type="button" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all">歷史上的今天</button>
+            <button id="liveModeRandomBtn" type="button" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all">無限隨機新知</button>
+          </div>
+        </div>
+
+        <div id="liveWikiContent" class="rounded-2xl bg-stone-50 dark:bg-slate-800/60 border border-stone-200/80 dark:border-slate-700/70 p-4 sm:p-5 space-y-3">
+          <div class="text-sm text-stone-500 dark:text-slate-400">正在從維基百科載入今日最新資料...</div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+          <span id="liveWikiStatusText" class="text-xs text-stone-500 dark:text-slate-400">資料直接來自維基百科官方公開 API，每天自動同步</span>
+          <div class="flex items-center gap-2">
+            <button id="liveWikiNextBtn" type="button" class="min-h-[38px] px-3.5 py-1.5 rounded-xl border border-stone-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700 text-xs font-semibold text-stone-700 dark:text-slate-200 inline-flex items-center gap-1.5 transition-colors">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              <span id="liveWikiNextLabel">換一則今日事件</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Category Strip on Home -->
+      <div class="bg-white dark:bg-slate-900 border border-stone-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-bold text-stone-800 dark:text-slate-200 flex items-center gap-1.5">
+            <i data-lucide="layers" class="w-4 h-4 text-amber-500"></i>
+            <span>快速切換 8 大知識領域</span>
+          </h2>
+          <button id="goExploreAllBtn" type="button" class="text-xs font-semibold text-amber-600 dark:text-amber-400 hover:underline">
+            瀏覽全部 33 則 →
+          </button>
+        </div>
+        <div id="homeCategoryGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: EXPLORE -->
+    <section id="viewExplore" class="hidden space-y-5">
+      <div class="bg-white dark:bg-slate-900 border border-stone-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-5 space-y-4 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 class="text-lg sm:text-xl font-bold text-stone-900 dark:text-white">領域探索題庫</h2>
+            <p class="text-xs sm:text-sm text-stone-500 dark:text-slate-400">涵蓋 8 大領域、共 33 則已查證冷知識，每則皆附維基百科連結</p>
+          </div>
+          <div class="relative w-full sm:w-64">
+            <i data-lucide="search" class="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            <input id="searchInput" type="search" placeholder="搜尋關鍵字（如：火星、章魚）" class="w-full min-h-[42px] pl-10 pr-4 py-2 rounded-xl border border-stone-200 dark:border-slate-700 bg-stone-50 dark:bg-slate-800 text-sm text-stone-900 dark:text-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500" />
+          </div>
+        </div>
+
+        <!-- Category Filter Chips -->
+        <div id="exploreCategoryChips" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1"></div>
+      </div>
+
+      <!-- Result Count -->
+      <div class="flex items-center justify-between text-xs sm:text-sm text-stone-500 dark:text-slate-400 px-1">
+        <span id="exploreResultCount">顯示 33 則冷知識</span>
+        <button id="clearFiltersBtn" type="button" class="hidden text-amber-600 dark:text-amber-400 font-semibold hover:underline">清除篩選條件</button>
+      </div>
+
+      <!-- Cards Grid -->
+      <div id="exploreGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+
+    <!-- VIEW 3: SAVED & PROGRESS -->
+    <section id="viewSaved" class="hidden space-y-5">
+      <!-- Progress Summary -->
+      <div class="bg-white dark:bg-slate-900 border border-stone-200/90 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 class="text-lg sm:text-xl font-bold text-stone-900 dark:text-white">我的探索進度與收藏</h2>
+            <p class="text-xs sm:text-sm text-stone-500 dark:text-slate-400">標記「長知識了」或「收藏」的紀錄會自動保存在本機瀏覽器中</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="px-3.5 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200/70 dark:border-emerald-800/60 text-center">
+              <div id="statLearnedNum" class="text-lg font-extrabold text-emerald-700 dark:text-emerald-300">0 / 33</div>
+              <div class="text-[11px] text-emerald-600 dark:text-emerald-400">已讀知識</div>
+            </div>
+            <div class="px-3.5 py-2 rounded-xl bg-amber-50 dark:bg-amber-950/50 border border-amber-200/70 dark:border-amber-800/60 text-center">
+              <div id="statSavedNum" class="text-lg font-extrabold text-amber-700 dark:text-amber-300">0</div>
+              <div class="text-[11px] text-amber-600 dark:text-amber-400">已收藏</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Progress Bars -->
+        <div id="categoryProgressList" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2"></div>
+      </div>
+
+      <!-- Saved List -->
+      <div class="space-y-3">
+        <h3 class="text-base font-bold text-stone-800 dark:text-slate-200 px-1 flex items-center gap-2">
+          <i data-lucide="bookmark-check" class="w-4 h-4 text-amber-500"></i>
+          <span>已收藏的冷知識</span>
+        </h3>
+        <div id="savedGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav aria-label="行動版導覽" class="sm:hidden fixed bottom-0 inset-x-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-stone-200 dark:border-slate-800 px-2 py-1.5">
+    <div class="grid grid-cols-3 gap-1 max-w-md mx-auto">
+      <button data-tab="today" type="button" class="mobile-tab min-h-[48px] rounded-xl flex flex-col items-center justify-center gap-0.5 text-xs font-medium transition-colors">
+        <i data-lucide="calendar-days" class="w-5 h-5"></i>
+        <span>今日精選</span>
+      </button>
+      <button data-tab="explore" type="button" class="mobile-tab min-h-[48px] rounded-xl flex flex-col items-center justify-center gap-0.5 text-xs font-medium transition-colors">
+        <i data-lucide="compass" class="w-5 h-5"></i>
+        <span>領域探索</span>
+      </button>
+      <button data-tab="saved" type="button" class="mobile-tab min-h-[48px] rounded-xl flex flex-col items-center justify-center gap-0.5 text-xs font-medium transition-colors relative">
+        <i data-lucide="bookmark" class="w-5 h-5"></i>
+        <span>收藏 (<span id="mobileSavedBadge">0</span>)</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Detail Modal -->
+  <div id="factModal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-stone-950/60 backdrop-blur-xs">
+    <div id="factModalCard" class="w-full sm:max-w-2xl bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl border border-stone-200 dark:border-slate-800 shadow-2xl max-h-[90vh] overflow-y-auto animate-card">
+      <div id="modalAccentBar" class="h-2 w-full bg-amber-500"></div>
+      <div class="p-5 sm:p-7 space-y-5">
+        <div class="flex items-center justify-between gap-2">
+          <span id="modalCategoryPill" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"></span>
+          <button id="closeModalBtn" type="button" aria-label="關閉視窗" class="w-9 h-9 rounded-full bg-stone-100 dark:bg-slate-800 hover:bg-stone-200 dark:hover:bg-slate-700 flex items-center justify-center text-stone-600 dark:text-slate-300 transition-colors">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <h3 id="modalTitle" class="text-xl sm:text-2xl font-extrabold text-stone-900 dark:text-white leading-snug"></h3>
+        <p id="modalBody" class="text-sm sm:text-base leading-relaxed text-stone-700 dark:text-slate-300"></p>
+        <div id="modalHighlights" class="grid grid-cols-1 sm:grid-cols-3 gap-2"></div>
+
+        <!-- Source Box -->
+        <div class="rounded-2xl bg-stone-50 dark:bg-slate-800/70 border border-stone-200 dark:border-slate-700 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="min-w-0">
+            <div class="text-xs font-semibold text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
+              <i data-lucide="badge-check" class="w-3.5 h-3.5"></i>
+              <span>維基百科查證來源</span>
+            </div>
+            <div id="modalSourceTitle" class="text-sm font-bold text-stone-900 dark:text-white truncate mt-0.5"></div>
+          </div>
+          <a id="modalSourceLink" href="https://zh.wikipedia.org" target="_blank" rel="noopener noreferrer" class="min-h-[42px] px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 text-sm font-semibold inline-flex items-center justify-center gap-1.5 shrink-0 transition-colors">
+            <span>開啟維基百科</span>
+            <i data-lucide="external-link" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 pt-1">
+          <button id="modalLearnedBtn" type="button" class="min-h-[42px] px-4 py-2 rounded-xl border text-sm font-semibold inline-flex items-center gap-1.5 transition-all"></button>
+          <button id="modalSaveBtn" type="button" class="min-h-[42px] px-4 py-2 rounded-xl border text-sm font-semibold inline-flex items-center gap-1.5 transition-all"></button>
+          <button id="modalCopyBtn" type="button" class="min-h-[42px] px-4 py-2 rounded-xl border border-stone-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700 text-stone-700 dark:text-slate-200 text-sm font-semibold inline-flex items-center gap-1.5 transition-colors">
+            <i data-lucide="copy" class="w-4 h-4"></i>
+            <span>複製內容</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Install App & Daily Reminder Modal -->
+  <div id="installModal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-stone-950/60 backdrop-blur-xs">
+    <div class="w-full sm:max-w-lg bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl border border-stone-200 dark:border-slate-800 shadow-2xl max-h-[90vh] overflow-y-auto animate-card">
+      <div class="h-2 w-full bg-amber-500"></div>
+      <div class="p-5 sm:p-6 space-y-5">
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center">
+              <i data-lucide="smartphone" class="w-4 h-4"></i>
+            </span>
+            <h3 class="text-lg font-extrabold text-stone-900 dark:text-white">安裝成 App 與每日自動提醒</h3>
+          </div>
+          <button id="closeInstallModalBtn" type="button" aria-label="關閉安裝視窗" class="w-9 h-9 rounded-full bg-stone-100 dark:bg-slate-800 hover:bg-stone-200 dark:hover:bg-slate-700 flex items-center justify-center text-stone-600 dark:text-slate-300 transition-colors">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Native PWA Install Button (shown when browser supports it) -->
+        <div id="nativeInstallBox" class="hidden rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 p-4 flex items-center justify-between gap-3">
+          <div class="text-xs sm:text-sm text-amber-900 dark:text-amber-200 font-medium">你的瀏覽器支援一鍵安裝成桌面／手機 App</div>
+          <button id="triggerNativeInstallBtn" type="button" class="min-h-[40px] px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs sm:text-sm font-bold shrink-0 transition-colors">
+            立即安裝
+          </button>
+        </div>
+
+        <!-- Platform Steps -->
+        <div class="space-y-2.5 text-xs sm:text-sm text-stone-600 dark:text-slate-300">
+          <div class="rounded-xl bg-stone-50 dark:bg-slate-800/60 border border-stone-200/80 dark:border-slate-700/70 p-3.5 space-y-1">
+            <div class="font-bold text-stone-900 dark:text-white">iPhone / iPad（Safari）</div>
+            <p>開啟公開網址後，點底部「分享」圖示 → 選擇「加入主畫面」，就會出現 App 圖示並全螢幕開啟。</p>
+          </div>
+          <div class="rounded-xl bg-stone-50 dark:bg-slate-800/60 border border-stone-200/80 dark:border-slate-700/70 p-3.5 space-y-1">
+            <div class="font-bold text-stone-900 dark:text-white">Android（Chrome）或電腦（Chrome / Edge）</div>
+            <p>點瀏覽器右上角選單或網址列右側圖示 → 選擇「安裝應用程式」或「加到主畫面」。</p>
+          </div>
+        </div>
+
+        <!-- Daily Reminder Section -->
+        <div class="rounded-2xl bg-stone-50 dark:bg-slate-800/60 border border-stone-200/80 dark:border-slate-700/70 p-4 space-y-3">
+          <div class="flex items-center justify-between gap-2">
+            <div>
+              <div class="text-sm font-bold text-stone-900 dark:text-white flex items-center gap-1.5">
+                <i data-lucide="bell-ring" class="w-4 h-4 text-amber-500"></i>
+                <span>設定每日冷知識提醒</span>
+              </div>
+              <p class="text-xs text-stone-500 dark:text-slate-400 mt-0.5">每天固定時間提醒你來看今日自動更新的冷知識</p>
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+            <label for="reminderTimeInput" class="sr-only">每日提醒時間</label>
+            <input id="reminderTimeInput" type="time" value="09:00" class="min-h-[42px] px-3 py-2 rounded-xl border border-stone-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-mono text-stone-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500" />
+            <button id="downloadIcsBtn" type="button" class="flex-1 min-h-[42px] px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 text-xs sm:text-sm font-semibold inline-flex items-center justify-center gap-1.5 transition-colors">
+              <i data-lucide="calendar-plus" class="w-4 h-4"></i>
+              <span>加入每日行事曆提醒（.ics）</span>
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between pt-2 border-t border-stone-200/70 dark:border-slate-700/70">
+            <span class="text-xs text-stone-600 dark:text-slate-300">自動跨日刷新：午夜 00:00 自動換新題</span>
+            <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">已啟用</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- In-Page Toast Notification -->
+  <div id="toast" role="status" aria-live="polite" class="pointer-events-none fixed bottom-20 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 opacity-0 translate-y-2 transition-all duration-200">
+    <div id="toastText" class="px-4 py-2.5 rounded-xl bg-stone-900 dark:bg-slate-100 text-white dark:text-slate-900 text-sm font-medium shadow-lg flex items-center gap-2 whitespace-nowrap"></div>
+  </div>
+
+  <script>
+    const CATEGORIES = {
+      space: {
+        name: '太空與天文',
+        icon: 'orbit',
+        bar: 'bg-indigo-500',
+        pill: 'bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-indigo-950/60 dark:text-indigo-300 dark:border-indigo-800/70'
+      },
+      biology: {
+        name: '生物與自然',
+        icon: 'leaf',
+        bar: 'bg-emerald-500',
+        pill: 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800/70'
+      },
+      science: {
+        name: '科學與物理',
+        icon: 'atom',
+        bar: 'bg-sky-500',
+        pill: 'bg-sky-50 text-sky-700 border border-sky-200 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800/70'
+      },
+      history: {
+        name: '歷史與文明',
+        icon: 'landmark',
+        bar: 'bg-amber-600',
+        pill: 'bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800/70'
+      },
+      culture: {
+        name: '藝術與文化',
+        icon: 'palette',
+        bar: 'bg-rose-500',
+        pill: 'bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800/70'
+      },
+      tech: {
+        name: '科技與語言',
+        icon: 'cpu',
+        bar: 'bg-violet-500',
+        pill: 'bg-violet-50 text-violet-700 border border-violet-200 dark:bg-violet-950/60 dark:text-violet-300 dark:border-violet-800/70'
+      },
+      food: {
+        name: '飲食與植物',
+        icon: 'coffee',
+        bar: 'bg-orange-500',
+        pill: 'bg-orange-50 text-orange-700 border border-orange-200 dark:bg-orange-950/60 dark:text-orange-300 dark:border-orange-800/70'
+      },
+      geography: {
+        name: '地理與世界',
+        icon: 'globe',
+        bar: 'bg-teal-500',
+        pill: 'bg-teal-50 text-teal-700 border border-teal-200 dark:bg-teal-950/60 dark:text-teal-300 dark:border-teal-800/70'
+      }
+    };
+
+    const FACTS = [
+      {
+        id: 'f01',
+        category: 'space',
+        title: '金星自轉一圈的時間，比它繞太陽公轉一整年還要長',
+        body: '太陽系大多數行星都是逆時針自轉，但金星不僅是罕見的順時針逆行自轉，轉速也是所有行星中最慢的：金星自轉一圈（恆星日）需要 243 個地球日，而繞太陽公轉一圈（金星年）只需約 224.7 個地球日。此外，金星大氣層有 96.5% 是二氧化碳，濃厚溫室效應使其表面均溫高達 462°C，比更靠近太陽的水星還熱。',
+        highlights: [
+          { label: '自轉週期（恆星日）', value: '243 地球日' },
+          { label: '公轉週期（金星年）', value: '224.7 地球日' },
+          { label: '表面平均溫度', value: '462 °C' }
+        ],
+        sourceTitle: '維基百科：金星',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E9%87%91%E6%98%9F'
+      },
+      {
+        id: 'f05',
+        category: 'biology',
+        title: '燈塔水母能從成熟期「返老還童」，理論上沒有壽命上限',
+        body: '燈塔水母（學名 Turritopsis nutricula）直徑僅約 4 至 5 毫米，身體透明並可見鮮紅色的十字型胃。普通水母在有性生殖後便會死亡，但性成熟的燈塔水母能透過「分化轉移」從水母型直接重返水螅型，跳過死亡過程。理論上這個循環沒有次數限制，因此獲得「永生水母」的俗稱。',
+        highlights: [
+          { label: '傘體直徑', value: '約 4–5 毫米' },
+          { label: '核心機制', value: '分化轉移' },
+          { label: '俗稱', value: '永生水母' }
+        ],
+        sourceTitle: '維基百科：燈塔水母',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E7%81%AF%E5%A1%94%E6%B0%B4%E6%AF%8D'
+      },
+      {
+        id: 'f15',
+        category: 'history',
+        title: '人類史上有記載最短的戰爭「英尚戰爭」只打了 38 至 45 分鐘',
+        body: '1896 年 8 月 27 日，英國與尚吉巴蘇丹國因王位繼承爭議爆發衝突。上午 9 時 02 分英國海軍艦隊開始砲擊木造王宮，守軍火砲迅速失效，王宮旗幟於 9 時 40 分遭擊落後戰事隨即結束。這場戰爭總共僅持續 38 至 45 分鐘（以 38 分鐘說法流傳最廣），創下有史以來最短戰爭紀錄。',
+        highlights: [
+          { label: '發生日期', value: '1896 年 8 月 27 日' },
+          { label: '持續時間', value: '38–45 分鐘' },
+          { label: '交戰雙方', value: '英國 vs 尚吉巴' }
+        ],
+        sourceTitle: '維基百科：英尚戰爭',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E8%8B%B1%E6%A1%91%E6%88%98%E4%BA%89'
+      },
+      {
+        id: 'f10',
+        category: 'science',
+        title: '艾菲爾鐵塔會隨日照熱脹冷縮，塔頂最多「歪頭」18 公分',
+        body: '法國巴黎的艾菲爾鐵塔結構使用了 7,300 公噸熟鐵與 250 萬個鉚釘。由於金屬會熱脹冷縮，當陽光照射鐵塔時，靠近太陽那一側的鐵會受熱膨脹，使整座鐵塔的形狀略為變化，塔頂最多會往遠離太陽的方向偏移達 18 公分。為了防鏽，鐵塔每七年還需重新塗刷 60 公噸油漆。',
+        highlights: [
+          { label: '最大偏移量', value: '最多 18 公分' },
+          { label: '結構熟鐵重', value: '7,300 公噸' },
+          { label: '定期防鏽', value: '每 7 年 60 公噸漆' }
+        ],
+        sourceTitle: '維基百科：艾菲爾鐵塔',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E8%89%BE%E8%8F%B2%E7%88%BE%E9%90%B5%E5%A1%94'
+      },
+      {
+        id: 'f19',
+        category: 'culture',
+        title: '奧運曾在 1912 至 1948 年間頒發「藝術比賽」金銀銅牌',
+        body: '受現代奧運發起人古柏坦效法古希臘精神的構想影響，1912 年至 1948 年間，奧運曾正式舉辦「繆斯五項藝術比賽」，涵蓋建築、文學、音樂、繪畫與雕塑五大項，參賽作品須與體育相關且未曾發表。後來因參賽者多為職業藝術家，與早期奧運堅持的業餘原則相違背，自 1954 年起改為非競賽性的藝術展覽。',
+        highlights: [
+          { label: '舉辦時期', value: '1912–1948 年' },
+          { label: '五大類別', value: '建築文學音樂繪畫雕塑' },
+          { label: '取消轉型', value: '1954 年改為展覽' }
+        ],
+        sourceTitle: '維基百科：奧林匹克運動會藝術比賽',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E5%A5%A5%E6%9E%97%E5%8C%B9%E5%85%8B%E8%BF%90%E5%8A%A8%E4%BC%9A%E8%89%BA%E6%9C%AF%E6%AF%94%E8%B5%9B'
+      },
+      {
+        id: 'f23',
+        category: 'tech',
+        title: '電腦故障被稱作「Bug」，真的曾有一隻飛蛾卡進電腦裡',
+        body: '1947 年 9 月 9 日，美國電腦科學先驅葛麗絲·霍普（Grace Hopper）的團隊在排查 Mark II 電腦突然當機的原因時，意外發現一隻飛蛾飛進機器內部造成故障。團隊將飛蛾貼在工作誌上紀錄這個「第一個實際找到的電腦蟲（Bug）」，這份珍貴手稿至今仍保存於華盛頓的美國國家歷史博物館。',
+        highlights: [
+          { label: '事件日期', value: '1947 年 9 月 9 日' },
+          { label: '故障元兇', value: '飛入 Mark II 的飛蛾' },
+          { label: '館藏地點', value: '美國國家歷史博物館' }
+        ],
+        sourceTitle: '維基百科：程式錯誤',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E7%A8%8B%E5%BA%8F%E9%94%99%E8%AF%AF'
+      },
+      {
+        id: 'f28',
+        category: 'food',
+        title: '植物學上香蕉和西瓜都是「漿果」，但黑莓與覆盆子其實不是',
+        body: '在植物學定義中，「漿果」（Berry）指的是由單朵花的子房發育而成的肉質單果，因此香蕉、番茄、西瓜、南瓜、番木瓜都完全符合漿果的科學定義。反倒是日常英文名稱帶有 berry 的黑莓（blackberry）、覆盆子（raspberry）與桑葚（mulberry），在植物學分類上其實屬於「聚合果」，並非真正的漿果。',
+        highlights: [
+          { label: '真正的漿果', value: '香蕉、番茄、西瓜' },
+          { label: '非漿果（聚合果）', value: '黑莓、覆盆子、桑葚' },
+          { label: '分類依據', value: '單花子房發育而成' }
+        ],
+        sourceTitle: '維基百科：漿果',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E6%B5%86%E6%9E%9C'
+      },
+      {
+        id: 'f31',
+        category: 'geography',
+        title: '死海湖面低於海平面 424 公尺，是地球已露出陸地的最低點',
+        body: '位於中東的死海是世界上地勢最低的湖泊，湖面海拔達 −424 公尺，湖岸線即為地球表面已露出陸地的最低點，湖泊最深處可達 330 公尺。由於湖水鹽度極高且越往湖底越高，死海擁有驚人的浮力，即使不會游泳的人也能輕易仰漂在水面上。',
+        highlights: [
+          { label: '湖面海拔', value: '−424 公尺' },
+          { label: '最大水深', value: '330 公尺' },
+          { label: '湖泊面積', value: '810 平方公里' }
+        ],
+        sourceTitle: '維基百科：死海',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E6%AD%BB%E6%B5%B7'
+      },
+      {
+        id: 'f02',
+        category: 'space',
+        title: '火星上的「奧林帕斯山」高達 21,229 公尺，將近聖母峰三倍',
+        body: '火星上的盾狀火山奧林帕斯山（Olympus Mons）是太陽系行星中已知最高的山峰，高於火星基準面達 21,229 公尺，將近地球聖母峰的三倍高，山體直徑更廣達 648 公里。1972 年水手 9 號探測器從軌道拍下照片後，人類才正式確認它遠高於地球上的任何一座山。',
+        highlights: [
+          { label: '基準面高度', value: '21,229 公尺' },
+          { label: '火山直徑', value: '648 公里' },
+          { label: '確認探測器', value: '1972 年水手 9 號' }
+        ],
+        sourceTitle: '維基百科：奧林帕斯山 (火星)',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E5%A5%A7%E6%9E%97%E5%B8%95%E6%96%AF%E5%B1%B1_(%E7%81%AB%E6%98%9F)'
+      },
+      {
+        id: 'f06',
+        category: 'biology',
+        title: '澳洲袋熊是自然界目前已知唯一會排出「立方體」糞便的動物',
+        body: '棲息於澳洲的袋熊新陳代謝極慢，消化食物大約需要 14 天，且是目前已知自然界中唯一能排出方形立方體排遺的動物，生物學家推測可能與標記領地有關。另一個冷知識是，袋熊的育幼袋開口朝後，這樣在挖掘地底洞穴時，泥土才不會灌進袋中弄傷小袋熊。',
+        highlights: [
+          { label: '消化時間', value: '約 14 天' },
+          { label: '排遺特徵', value: '自然界唯一立方體' },
+          { label: '育幼袋設計', value: '開口朝後防進土' }
+        ],
+        sourceTitle: '維基百科：袋熊',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E8%A2%8B%E7%86%8A'
+      },
+      {
+        id: 'f16',
+        category: 'history',
+        title: '日本建築公司「金剛組」創立於西元 578 年，曾為世上最古家族企業',
+        body: '總部位於大阪的金剛組創辦於西元 578 年，專精寺廟建築與修繕，曾是世界上歷史最悠久的家族企業，歷經 40 代「堂主」傳承，撐過明治維新與二戰。直到 2006 年因經濟泡沫負債進行清算，由高松建設接管並延續品牌，至今仍繼續從事傳統寺廟建築工藝。',
+        highlights: [
+          { label: '創立年份', value: '西元 578 年' },
+          { label: '家族傳承', value: '40 代堂主' },
+          { label: '核心本業', value: '傳統寺廟建築' }
+        ],
+        sourceTitle: '維基百科：金剛組',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E9%87%91%E5%89%9B%E7%B5%84'
+      },
+      {
+        id: 'f11',
+        category: 'science',
+        title: '堅硬無比的鑽石與柔軟的鉛筆石墨，竟然都由純碳元素組成',
+        body: '外觀透明、硬度極高的鑽石（金剛石），與柔軟滑膩、不透明且能導電的石墨，其實都是純碳元素的「同素異形體」。兩者性質之所以天差地遠，完全取決於碳原子的晶體排列方式：石墨呈層狀蜂窩六邊形結構且層間作用力弱，因而質軟並具自由電子可導電。',
+        highlights: [
+          { label: '化學成分', value: '100% 純碳元素' },
+          { label: '科學名詞', value: '同素異形體' },
+          { label: '石墨特性', value: '層狀六邊形・可導電' }
+        ],
+        sourceTitle: '維基百科：石墨',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E7%9F%B3%E5%A2%A8'
+      },
+      {
+        id: 'f21',
+        category: 'culture',
+        title: '蘇格蘭的官方國獸，竟然是神話生物「獨角獸」',
+        body: '許多國家的國獸是真實存在的猛獸或珍稀動物，但蘇格蘭的官方象徵與國獸卻是傳說中的獨角獸。在凱爾特神話裡，獨角獸象徵正直與純潔；早在 15 世紀蘇格蘭國王詹姆斯三世統治時期，就曾發行印有獨角獸圖案的硬幣，至今蘇格蘭皇家徽章上仍能見到獨角獸的身影。',
+        highlights: [
+          { label: '官方國獸', value: '獨角獸（神話生物）' },
+          { label: '象徵意義', value: '正直與純潔' },
+          { label: '歷史紀錄', value: '15 世紀即印於硬幣' }
+        ],
+        sourceTitle: '維基百科：獨角獸',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E7%8B%AC%E8%A7%92%E5%85%BD'
+      },
+      {
+        id: 'f26',
+        category: 'tech',
+        title: '讓人愛不釋手的「氣泡布」，最初竟然是為了當立體壁紙發明的',
+        body: '1957 年，兩位發明家阿爾弗雷德·菲爾丁和馬克·沙瓦納原本試圖設計一種「三維塑膠壁紙」。雖然這款壁紙在市場上失敗了，但他們發現這種充滿空氣泡的塑膠膜非常適合緩衝防撞，進而改作為包裝材料，並於 1960 年創立希悅爾公司（Sealed Air），成就了全球最常見的包材。',
+        highlights: [
+          { label: '發明年份', value: '1957 年' },
+          { label: '原始構想', value: '三維塑膠壁紙' },
+          { label: '博物館用法', value: '平滑面朝內防壓痕' }
+        ],
+        sourceTitle: '維基百科：氣泡布',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E6%B0%A3%E6%B3%A1%E5%B8%83'
+      },
+      {
+        id: 'f29',
+        category: 'food',
+        title: '可口可樂誕生於 1886 年，原本是由一位美國藥師調配出來的',
+        body: '1886 年 5 月 8 日，美國喬治亞州亞特蘭大市的藥師約翰·彭伯頓（John Pemberton）創造了可口可樂的原始糖漿配方，日後發展成全球最具代表性的焦糖色汽水飲料品牌。',
+        highlights: [
+          { label: '誕生日期', value: '1886 年 5 月 8 日' },
+          { label: '發源地點', value: '美國亞特蘭大市' },
+          { label: '發明人職業', value: '藥師約翰·彭伯頓' }
+        ],
+        sourceTitle: '維基百科：可口可樂',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E5%8F%AF%E5%8F%A3%E5%8F%AF%E4%B9%90'
+      },
+      {
+        id: 'f32',
+        category: 'geography',
+        title: '撒哈拉沙漠面積超過 940 萬平方公里，幾乎等於整個美國國土',
+        body: '橫跨北非、東至紅海、西至大西洋的撒哈拉沙漠，總面積超過 9,400,000 平方公里（約 360 萬平方英里），幾乎與整個美國國土面積相當。它是地球上規模僅次於南極與北極荒漠的廣大乾燥區域。',
+        highlights: [
+          { label: '總面積', value: '超過 940 萬平方公里' },
+          { label: '面積對比', value: '約等於美國國土' },
+          { label: '地理橫跨', value: '紅海至大西洋' }
+        ],
+        sourceTitle: '維基百科：撒哈拉沙漠',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E6%92%92%E5%93%88%E6%8B%89%E6%B2%99%E6%BC%A0'
+      },
+      {
+        id: 'f03',
+        category: 'space',
+        title: '土星的平均密度比水還低，若有夠大的泳池它甚至能浮起來',
+        body: '身為太陽系著名的氣體巨行星，土星體積是地球的 760 倍，質量為地球的 95 倍，但大氣層高達 96% 為氫、3% 為氦，使其平均密度低至每立方公分 0.687 克——比水的密度（每立方公分 1 克）還小，因此理論上能浮在水面上。',
+        highlights: [
+          { label: '平均密度', value: '0.687 g/cm³' },
+          { label: '大氣主成分', value: '96% 氫、3% 氦' },
+          { label: '體積比例', value: '地球的 760 倍' }
+        ],
+        sourceTitle: '維基百科：冷木星（土星章節）',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E5%86%B7%E6%9C%A8%E6%98%9F'
+      },
+      {
+        id: 'f07',
+        category: 'biology',
+        title: '章魚擁有 3 顆心臟，且三分之二的神經索都長在觸手上',
+        body: '章魚不僅有 3 顆心臟與 8 條腕（每條腕上約有 240 個吸盤），還擁有無脊椎動物中最高的大腦與身體比重。更特別的是，牠有三分之二的神經索分布在觸手內，使觸手能夠繞過大腦獨立進行複雜的反射活動，而不必完全依賴中樞大腦統一指揮。',
+        highlights: [
+          { label: '心臟數量', value: '3 顆心臟' },
+          { label: '觸手神經比例', value: '占全身三分之二' },
+          { label: '吸盤數量', value: '每腕約 240 個' }
+        ],
+        sourceTitle: '維基百科：八腕目',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E5%85%AB%E8%85%95%E7%9B%AE'
+      },
+      {
+        id: 'f17',
+        category: 'history',
+        title: '歷史上的維京戰士，在戰場上其實從來不戴「有角的頭盔」',
+        body: '卡通與影視常見的維京牛角頭盔其實是後世誤解。實戰近距離格鬥中，角盔既累贅又容易危及戰友，並無考古證據顯示維京戰士戴角盔作戰；唯一出土的真正維京鐵盔（挪威 Gjermundbu）並無雙角。角盔印象主要源自 19 世紀歐洲民族浪漫主義與華格納 1876 年歌劇《尼伯龍根的指環》舞台服裝。',
+        highlights: [
+          { label: '實戰裝備', value: '無角皮革或鐵製頭盔' },
+          { label: '迷思來源', value: '1876 年華格納歌劇' },
+          { label: '唯一出土真品', value: '挪威 Gjermundbu 鐵盔' }
+        ],
+        sourceTitle: '維基百科：維京人',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E7%B6%AD%E4%BA%AC%E4%BA%BA'
+      },
+      {
+        id: 'f12',
+        category: 'science',
+        title: '雙重彩虹外圈「霓」顏色完全相反，且最長彩虹世界紀錄在台北陽明山',
+        body: '當天空出現雙重彩虹時，外側較暗的「霓」因為陽光在雨滴內經過不同的折射與反射次數，色彩排列順序與內側主虹剛好相反，呈現「紅在內、紫在外」。此外，2017 年 11 月 30 日臺北市陽明山出現高掛長達 9 小時的彩虹，打破 1994 年英國約克郡 6 小時的紀錄。',
+        highlights: [
+          { label: '霓的色序', value: '紅在內・紫在外' },
+          { label: '最長紀錄地點', value: '臺北市陽明山' },
+          { label: '持續時間', value: '9 小時（2017 年）' }
+        ],
+        sourceTitle: '維基百科：彩虹',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E5%BD%A9%E8%99%B9'
+      },
+      {
+        id: 'f20',
+        category: 'culture',
+        title: '《蒙娜麗莎》在 1911 年被前羅浮宮玻璃工輕鬆夾在腋下偷走',
+        body: '1911 年，曾在羅浮宮負責裝框的義大利裝潢工人溫琴佐·佩魯賈利用對畫框構造的熟悉，趁機取下《蒙娜麗莎》，在服務樓梯間拆掉玻璃與畫框後，用脫下的工作服包裹畫作夾在腋下離開羅浮宮。失竊直到隔天才被發現，警方大陣仗調查期間甚至連畢卡索都曾遭逮捕偵訊。',
+        highlights: [
+          { label: '失竊年份', value: '1911 年' },
+          { label: '竊賊身分', value: '前羅浮宮裝框玻璃工' },
+          { label: '離譜插曲', value: '畢卡索曾遭逮捕偵訊' }
+        ],
+        sourceTitle: '維基百科：溫琴佐·佩魯賈',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E6%BA%AB%E7%90%B4%E4%BD%90%C2%B7%E4%BD%A9%E9%AD%AF%E8%B3%88'
+      },
+      {
+        id: 'f24',
+        category: 'tech',
+        title: '國際求救訊號「SOS」原本並不是任何英文句子的縮寫',
+        body: '許多人以為 SOS 是「Save Our Souls」的縮寫，但其實它是為了方便摩斯電碼收發而設計的：S（···）與 O（---）組成的「···---···」是少見的連續對稱電碼，在訊號干擾下極易辨識。SOS 於 1908 年後廣為採用，首次有紀錄使用是 1909 年的阿拉帕霍號，1912 年鐵達尼號沉沒時也曾在傳統 CQD 訊號中夾雜發送 SOS。',
+        highlights: [
+          { label: '摩斯電碼', value: '··· --- ···' },
+          { label: '選用原因', value: '連續對稱、抗干擾易記' },
+          { label: '首度紀錄使用', value: '1909 年阿拉帕霍號' }
+        ],
+        sourceTitle: '維基百科：SOS',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/SOS'
+      },
+      {
+        id: 'f30',
+        category: 'food',
+        title: '咖啡「跳舞山羊」起源傳說，考證最早其實出自 1671 年的羅馬論文',
+        body: '咖啡館最愛講的故事——衣索比亞牧羊人加爾第（Kaldi）在西元 850 年左右看到山羊吃了咖啡果實後興奮跳舞而發現咖啡——經學者考證很可能是後世虛構的文學傳說。這個故事最早出現在 1671 年羅馬東方語言教授奈隆的咖啡著作中，如今仍廣泛啟發全球咖啡品牌命名。',
+        highlights: [
+          { label: '傳說主角', value: '牧羊人加爾第（Kaldi）' },
+          { label: '最早文獻年份', value: '1671 年羅馬論文' },
+          { label: '傳說背景年代', value: '約西元 850 年' }
+        ],
+        sourceTitle: '維基百科：加爾第',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E5%8A%A0%E7%88%BE%E7%AC%AC'
+      },
+      {
+        id: 'f33',
+        category: 'geography',
+        title: '巴拿馬運河並非平坦相通，船隻必須靠船閘「爬上」海拔 26 公尺',
+        body: '全長 82 公里的巴拿馬運河於 1914 年通航，連接大西洋與太平洋，讓船隻不必繞行南美洲南端。由於運河中段是海拔約 26 公尺的人工湖「加通湖」（面積約 470 平方公里），船隻通行時必須經過三級船閘注水逐級抬升至湖面高度，穿過湖區後再由另一端船閘降回海平面。',
+        highlights: [
+          { label: '運河全長', value: '82 公里' },
+          { label: '加通湖海拔', value: '約 26 公尺' },
+          { label: '通行機制', value: '兩端各經 3 級船閘' }
+        ],
+        sourceTitle: '維基百科：巴拿馬運河',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E5%B7%B4%E6%8B%BF%E9%A9%AC%E8%BF%90%E6%B2%B3'
+      },
+      {
+        id: 'f04',
+        category: 'space',
+        title: '國際太空站時速高達 27,600 公里，每 92.68 分鐘就繞地球一圈',
+        body: '運行於平均海拔約 417 至 421 公里低地球軌道的國際太空站（ISS），平均飛行速度高達每秒 7,660 公尺（約每小時 27,600 公里），繞行地球一圈的軌道週期僅需 92.68 分鐘，是人類在太空中高速運轉的國際研究基地。',
+        highlights: [
+          { label: '軌道海拔', value: '約 417–421 公里' },
+          { label: '平均速度', value: '27,600 公里/小時' },
+          { label: '軌道週期', value: '92.68 分鐘' }
+        ],
+        sourceTitle: '維基百科：國際太空站',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E5%9B%BD%E9%99%85%E7%A9%BA%E9%97%B4%E7%AB%99'
+      },
+      {
+        id: 'f08',
+        category: 'biology',
+        title: '藍鯨的舌頭重達 2.7 公噸，但喉嚨卻吞不下一顆沙灘球',
+        body: '藍鯨是地球史上已知體型最大的動物，科學證實最長達 29.9 公尺、估計最重達 199 公噸。牠的舌頭約重 2.7 公噸，北大西洋藍鯨心臟平均重 180 公斤（有汽車大小），剛出生的幼鯨體重即達 2,700 公斤；但令人意外的是，藍鯨的喉嚨十分狹窄，連一顆沙灘球寬度的物體都無法吞下，只能濾食磷蝦維生。',
+        highlights: [
+          { label: '舌頭重量', value: '約 2.7 公噸' },
+          { label: '心臟平均重量', value: '180 公斤' },
+          { label: '新生幼鯨體重', value: '2,700 公斤' }
+        ],
+        sourceTitle: '維基百科：藍鯨',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E8%93%9D%E9%B2%B8'
+      },
+      {
+        id: 'f18',
+        category: 'history',
+        title: '牛津大學沒有確切創校日，但早在西元 1096 年就已有教學紀錄',
+        body: '英國著名的牛津大學歷史悠久到沒有明確的建校日期，不過依據現存文獻，牛津地區早在西元 1096 年就已經存在某種形式的大學教學活動，至今已延續超過九個世紀。',
+        highlights: [
+          { label: '最早教學紀錄', value: '西元 1096 年' },
+          { label: '歷史跨度', value: '逾 900 年' },
+          { label: '制度特色', value: '書院聯邦制' }
+        ],
+        sourceTitle: '維基百科：牛津大學',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E7%89%9B%E6%B4%A5%E5%A4%A7%E5%AD%A6'
+      },
+      {
+        id: 'f13',
+        category: 'science',
+        title: '新生兒的骨頭其實比成人的 206 塊更多，成長後才逐漸癒合',
+        body: '標準成年人的骨架由 206 塊骨骼組成，但在嬰兒剛出生時，許多骨骼還處於分離狀態。例如成人的 1 塊薦骨（Sacrum），在新生兒時期其實是由 5 節分開的骨頭構成；隨著發育成長，這些骨骼會逐漸融合癒合，使成人骨骼總數反而比新生兒少。',
+        highlights: [
+          { label: '成人標準骨數', value: '206 塊' },
+          { label: '薦骨變化', value: '新生兒 5 節 → 成人 1 塊' },
+          { label: '減少原因', value: '成長過程中自然癒合' }
+        ],
+        sourceTitle: '維基百科：人體骨骼列表',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E4%BA%BA%E4%BD%93%E9%AA%A8%E9%AA%BC%E5%88%97%E8%A1%A8'
+      },
+      {
+        id: 'f22',
+        category: 'culture',
+        title: '音樂神童莫札特在短短 35 年生命中，創作了超過 800 部作品',
+        body: '奧地利古典時期作曲家沃夫岡·阿瑪迪斯·莫札特（1756–1791）身兼鋼琴家與小提琴家，從 6 歲左右便開始留下創作紀錄。儘管英年早逝、享年僅 35 歲，他一生創作了逾 800 部音樂作品，涵蓋交響曲、協奏曲、歌劇與室內樂等各種體裁。',
+        highlights: [
+          { label: '在世年份', value: '1756–1791（35 歲）' },
+          { label: '一生創作量', value: '超過 800 部作品' },
+          { label: '早期作品起點', value: '約 6 歲開始譜曲' }
+        ],
+        sourceTitle: '維基百科：沃夫岡·阿瑪迪斯·莫札特',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E6%B2%83%E5%B0%94%E5%A4%AB%E5%86%88%C2%B7%E9%98%BF%E7%8E%9B%E5%A4%9A%E4%BC%8A%E6%96%AF%C2%B7%E8%8E%AB%E6%89%8E%E7%89%B9'
+      },
+      {
+        id: 'f25',
+        category: 'tech',
+        title: '古羅馬的「凱撒密碼」，用簡單的字母位移就能加密軍事情報',
+        body: '凱撒密碼以羅馬共和時期的凱撒命名，據稱是他與將軍聯繫時使用的替換式加密法。做法是將明文中的每個字母在字母表上固定向後（或向前）推移特定位數——例如偏移量為 3 時，A 會變成 D、B 會變成 E。雖然現代容易被頻率分析破解，卻是密碼學史上的經典起點。',
+        highlights: [
+          { label: '密碼類型', value: '替換式密碼' },
+          { label: '經典偏移量 3', value: 'A → D、B → E' },
+          { label: '歷史用途', value: '羅馬時期軍事通訊' }
+        ],
+        sourceTitle: '維基百科：凱撒密碼',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E5%87%B1%E6%92%92%E5%AF%86%E7%A2%BC'
+      },
+      {
+        id: 'f09',
+        category: 'biology',
+        title: '雄性「濕地葦鶯」的歌聲，平均能模仿約 75 種其他鳥類的叫聲',
+        body: '外表樸素的濕地葦鶯是鳥類界的超級模仿大師！每一隻雄性濕地葦鶯的鳴唱曲目裡，平均結合了約 75 種不同鳥類（包含其他雀形目、涉禽、犀鳥與鴿子）的模仿音，而且這些「歌單」全都在牠出生後第一年的夏季與非洲越冬期間學成，之後就不再新增。',
+        highlights: [
+          { label: '平均模仿種數', value: '約 75 種鳥類' },
+          { label: '學習黃金期', value: '出生後第一年內' },
+          { label: '模仿對象', value: '雀形目、涉禽、鴿子等' }
+        ],
+        sourceTitle: '維基百科：濕地葦鶯',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E6%BF%95%E5%9C%B0%E8%91%A6%E9%B6%AF'
+      },
+      {
+        id: 'f14',
+        category: 'science',
+        title: '搞笑諾貝爾獎發現：3 公斤以上哺乳動物排尿幾乎都在 21 秒左右完成',
+        body: '美國喬治亞理工學院流體力學教授胡立德（David L. Hu）與楊佩良團隊比對動物園內各種體重 3 公斤以上的哺乳動物，驚人地發現無論體型多大，牠們幾乎都能在 21±13 秒內完成排尿，關鍵在於尿道構造讓排尿效率大幅提升。這項研究讓團隊獲得 2015 年搞笑諾貝爾物理學獎，之後他們又因研究袋熊方形糞便於 2019 年再度獲獎。',
+        highlights: [
+          { label: '平均排尿時間', value: '21 ± 13 秒' },
+          { label: '適用範圍', value: '3 公斤以上哺乳動物' },
+          { label: '獲獎紀錄', value: '2015 搞笑諾貝爾物理獎' }
+        ],
+        sourceTitle: '維基百科：胡立德',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E8%83%A1%E7%AB%8B%E5%BE%B7'
+      },
+      {
+        id: 'f27',
+        category: 'tech',
+        title: '魔術方塊是建築教授發明的，四階方塊的英文原名竟叫「魯比克的復仇」',
+        body: '風靡全球的魔術方塊由匈牙利建築學教授暨雕塑家魯比克·艾爾諾於 1974 年發明，最初名稱為「Magic Cube」。後來由 Péter Sebestény 設計的四階魔術方塊，在正式量產前更被命名為「Rubik\'s Revenge」，直譯就是「魯比克的復仇」。',
+        highlights: [
+          { label: '發明年份', value: '1974 年' },
+          { label: '發明者職業', value: '建築學教授暨雕塑家' },
+          { label: '四階英文原名', value: 'Rubik\'s Revenge' }
+        ],
+        sourceTitle: '維基百科：魔術方塊',
+        sourceUrl: 'https://zh.wikipedia.org/zh-tw/%E9%AD%94%E6%96%B9'
+      }
+    ];
+
+    // Safe Storage Helpers
+    function loadStorage(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (e) {
+        return fallback;
+      }
+    }
+
+    function saveStorage(key, value) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (e) {
+        // Storage disabled in sandbox; keep in-memory state
+      }
+    }
+
+    // App State
+    const state = {
+      activeTab: 'today',
+      dayOffset: 0,
+      overrideFactId: null,
+      selectedCategory: 'all',
+      searchQuery: '',
+      favorites: loadStorage('dt_favorites_v1', []),
+      learned: loadStorage('dt_learned_v1', []),
+      darkMode: loadStorage('dt_dark_v1', false),
+      modalFactId: null,
+      installModalOpen: false,
+      lastKnownDateKey: '',
+      liveMode: 'onthisday',
+      liveLoading: false,
+      liveError: '',
+      onThisDayEvents: [],
+      onThisDayIndex: 0,
+      randomWikiItem: null
+    };
+
+    let deferredInstallPrompt = null;
+
+    let countdownIntervalId = null;
+    let toastTimeoutId = null;
+
+    // Date & Fact Selection Helpers
+    function getTargetDate(offsetDays) {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      d.setDate(d.getDate() + offsetDays);
+      return d;
+    }
+
+    function getDayIndexForDate(dateObj) {
+      const epochDays = Math.floor(Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate()) / 86400000);
+      const len = FACTS.length;
+      return ((epochDays % len) + len) % len;
+    }
+
+    function formatChineseDate(dateObj) {
+      const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+      const y = dateObj.getFullYear();
+      const m = dateObj.getMonth() + 1;
+      const d = dateObj.getDate();
+      const w = weekdays[dateObj.getDay()];
+      return `${y} 年 ${m} 月 ${d} 日（${w}）`;
+    }
+
+    function getCurrentTodayFact() {
+      if (state.overrideFactId) {
+        const found = FACTS.find(f => f.id === state.overrideFactId);
+        if (found) return found;
+      }
+      const targetDate = getTargetDate(state.dayOffset);
+      return FACTS[getDayIndexForDate(targetDate)];
+    }
+
+    // Toast & Clipboard
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastText = document.getElementById('toastText');
+      toastText.textContent = message;
+      toast.classList.remove('opacity-0', 'translate-y-2');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      if (toastTimeoutId) clearTimeout(toastTimeoutId);
+      toastTimeoutId = setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 2200);
+    }
+
+    function copyFactToClipboard(fact) {
+      const cat = CATEGORIES[fact.category];
+      const text = `【每日冷知識｜${cat.name}】\n${fact.title}\n\n${fact.body}\n\n查證來源（${fact.sourceTitle}）：\n${fact.sourceUrl}`;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('已複製冷知識與維基百科來源連結');
+        }).catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast('已複製冷知識與維基百科來源連結');
+      } catch (e) {
+        showToast('複製失敗，請手動選取文字');
+      }
+      document.body.removeChild(ta);
+    }
+
+    // Mutations
+    function toggleFavorite(factId) {
+      const idx = state.favorites.indexOf(factId);
+      if (idx >= 0) {
+        state.favorites.splice(idx, 1);
+        showToast('已從收藏移除');
+      } else {
+        state.favorites.push(factId);
+        showToast('已加入我的收藏');
+      }
+      saveStorage('dt_favorites_v1', state.favorites);
+      renderAll();
+    }
+
+    function toggleLearned(factId) {
+      const idx = state.learned.indexOf(factId);
+      if (idx >= 0) {
+        state.learned.splice(idx, 1);
+        showToast('已取消已讀標記');
+      } else {
+        state.learned.push(factId);
+        showToast('太棒了！已標記為「長知識了」');
+      }
+      saveStorage('dt_learned_v1', state.learned);
+      renderAll();
+    }
+
+    function applyTheme() {
+      const html = document.documentElement;
+      const icon = document.getElementById('themeIcon');
+      if (state.darkMode) {
+        html.classList.add('dark');
+        icon.setAttribute('data-lucide', 'sun');
+      } else {
+        html.classList.remove('dark');
+        icon.setAttribute('data-lucide', 'moon');
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function getLocalDateKey(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
+    function setupDynamicManifest() {
+      try {
+        const manifest = {
+          name: '每日冷知識・Daily Trivia',
+          short_name: '每日冷知識',
+          description: '每天自動更新跨領域冷知識與維基百科可靠來源查證',
+          start_url: '.',
+          display: 'standalone',
+          background_color: '#fafaf9',
+          theme_color: '#f59e0b'
+        };
+        const blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+        const link = document.getElementById('pwaManifestLink');
+        if (link) link.href = URL.createObjectURL(blob);
+      } catch (e) {
+        // Ignore if Blob URLs are restricted
+      }
+    }
+
+    function checkAutoDateRollover() {
+      const nowKey = getLocalDateKey(new Date());
+      if (state.lastKnownDateKey && state.lastKnownDateKey !== nowKey) {
+        state.lastKnownDateKey = nowKey;
+        state.dayOffset = 0;
+        state.overrideFactId = null;
+        renderAll();
+        loadLiveWikipediaForCurrentDate(true);
+        showToast('新的一天到了！已自動更新今日冷知識');
+      } else if (!state.lastKnownDateKey) {
+        state.lastKnownDateKey = nowKey;
+      }
+    }
+
+    function startCountdown() {
+      if (countdownIntervalId) clearInterval(countdownIntervalId);
+      const update = () => {
+        checkAutoDateRollover();
+        const now = new Date();
+        const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+        const diff = Math.max(0, Math.floor((tomorrow - now) / 1000));
+        const h = String(Math.floor(diff / 3600)).padStart(2, '0');
+        const m = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
+        const s = String(diff % 60).padStart(2, '0');
+        const el = document.getElementById('countdownTimer');
+        if (el) el.textContent = `${h}:${m}:${s}`;
+      };
+      update();
+      countdownIntervalId = setInterval(update, 1000);
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    async function loadLiveWikipediaForCurrentDate(forceRefresh = false) {
+      const targetDate = getTargetDate(state.dayOffset);
+      const mm = String(targetDate.getMonth() + 1).padStart(2, '0');
+      const dd = String(targetDate.getDate()).padStart(2, '0');
+      const cacheKey = `dt_otd_${mm}_${dd}`;
+
+      if (!forceRefresh) {
+        const cached = loadStorage(cacheKey, null);
+        if (cached && Array.isArray(cached) && cached.length > 0) {
+          state.onThisDayEvents = cached;
+          state.onThisDayIndex = 0;
+          state.liveLoading = false;
+          state.liveError = '';
+          renderLiveWikiSection();
+          return;
+        }
+      }
+
+      state.liveLoading = true;
+      state.liveError = '';
+      renderLiveWikiSection();
+
+      try {
+        const url = `https://zh.wikipedia.org/api/rest_v1/feed/onthisday/selected/${mm}/${dd}`;
+        const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const rawList = (data.selected && data.selected.length > 0) ? data.selected : (data.events || []);
+        const cleaned = rawList
+          .filter(item => item && item.text)
+          .map(item => {
+            const page = (item.pages && item.pages[0]) || {};
+            const pageUrl = (page.content_urls && page.content_urls.desktop && page.content_urls.desktop.page)
+              ? page.content_urls.desktop.page
+              : `https://zh.wikipedia.org/zh-tw/${encodeURIComponent(mm + '月' + dd + '日')}`;
+            return {
+              year: item.year || '',
+              text: item.text,
+              pageTitle: page.normalizedtitle || page.title || `${Number(mm)}月${Number(dd)}日`,
+              extract: page.extract || '',
+              url: pageUrl
+            };
+          });
+
+        if (cleaned.length === 0) throw new Error('empty');
+        state.onThisDayEvents = cleaned;
+        state.onThisDayIndex = 0;
+        saveStorage(cacheKey, cleaned);
+        state.liveError = '';
+      } catch (err) {
+        state.liveError = '目前無法即時連線至維基百科（可能處於離線或受限環境），上方的 33 則內建精選冷知識仍可每日正常自動切換。';
+      } finally {
+        state.liveLoading = false;
+        renderLiveWikiSection();
+      }
+    }
+
+    async function fetchRandomWikiFact() {
+      state.liveLoading = true;
+      state.liveError = '';
+      renderLiveWikiSection();
+
+      try {
+        const res = await fetch('https://zh.wikipedia.org/api/rest_v1/page/random/summary', {
+          headers: { 'Accept': 'application/json' }
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const pageUrl = (data.content_urls && data.content_urls.desktop && data.content_urls.desktop.page)
+          ? data.content_urls.desktop.page
+          : 'https://zh.wikipedia.org/zh-tw/Wikipedia:%E9%A6%96%E9%A1%B5';
+        state.randomWikiItem = {
+          title: data.title || '維基百科條目',
+          description: data.description || '維基百科隨機探索條目',
+          extract: data.extract || '點擊下方連結前往維基百科查看完整條目與參考文獻。',
+          url: pageUrl
+        };
+        state.liveError = '';
+      } catch (err) {
+        state.liveError = '目前無法即時連線至維基百科（可能處於離線或受限環境），請稍後再試或先瀏覽內建精選題庫。';
+      } finally {
+        state.liveLoading = false;
+        renderLiveWikiSection();
+      }
+    }
+
+    function renderLiveWikiSection() {
+      const targetDate = getTargetDate(state.dayOffset);
+      const mm = targetDate.getMonth() + 1;
+      const dd = targetDate.getDate();
+      const dateBadge = document.getElementById('liveWikiDateBadge');
+      if (dateBadge) dateBadge.textContent = `${mm} 月 ${dd} 日`;
+
+      const otdBtn = document.getElementById('liveModeOnThisDayBtn');
+      const rndBtn = document.getElementById('liveModeRandomBtn');
+      const nextLabel = document.getElementById('liveWikiNextLabel');
+      const statusText = document.getElementById('liveWikiStatusText');
+      const container = document.getElementById('liveWikiContent');
+
+      if (!otdBtn || !rndBtn || !container) return;
+
+      otdBtn.className = state.liveMode === 'onthisday'
+        ? 'px-3 py-1.5 rounded-lg text-xs font-bold bg-white dark:bg-slate-900 text-stone-900 dark:text-white shadow-sm transition-all'
+        : 'px-3 py-1.5 rounded-lg text-xs font-medium text-stone-500 dark:text-slate-400 hover:text-stone-900 dark:hover:text-white transition-all';
+      rndBtn.className = state.liveMode === 'random'
+        ? 'px-3 py-1.5 rounded-lg text-xs font-bold bg-white dark:bg-slate-900 text-stone-900 dark:text-white shadow-sm transition-all'
+        : 'px-3 py-1.5 rounded-lg text-xs font-medium text-stone-500 dark:text-slate-400 hover:text-stone-900 dark:hover:text-white transition-all';
+
+      if (nextLabel) {
+        nextLabel.textContent = state.liveMode === 'onthisday' ? '換一則今日事件' : '抽下一則隨機條目';
+      }
+
+      if (state.liveLoading) {
+        container.innerHTML = `
+          <div class="flex items-center gap-2.5 text-sm text-stone-500 dark:text-slate-400 py-2">
+            <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-emerald-500"></i>
+            <span>正在從維基百科同步最新知識...</span>
+          </div>
+        `;
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
+
+      if (state.liveError) {
+        container.innerHTML = `
+          <div class="space-y-2.5">
+            <div class="text-sm text-stone-600 dark:text-slate-300 leading-relaxed">${escapeHtml(state.liveError)}</div>
+            <button type="button" id="liveRetryBtn" class="min-h-[36px] px-3.5 py-1.5 rounded-lg bg-stone-900 dark:bg-amber-500 text-white dark:text-slate-950 text-xs font-semibold inline-flex items-center gap-1.5">
+              <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+              <span>重新連線嘗試</span>
+            </button>
+          </div>
+        `;
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
+
+      if (state.liveMode === 'onthisday') {
+        const list = state.onThisDayEvents;
+        if (!list || list.length === 0) {
+          container.innerHTML = '<div class="text-sm text-stone-500 dark:text-slate-400">尚未載入今日歷史事件，請點擊「換一則今日事件」重試。</div>';
+          return;
+        }
+        const item = list[state.onThisDayIndex % list.length];
+        if (statusText) {
+          statusText.textContent = `歷史上的 ${mm} 月 ${dd} 日・第 ${(state.onThisDayIndex % list.length) + 1} / ${list.length} 則（自動依日期更新）`;
+        }
+        container.innerHTML = `
+          <div class="space-y-2.5">
+            <div class="flex flex-wrap items-center gap-2">
+              ${item.year ? `<span class="px-2.5 py-0.5 rounded-md bg-amber-500/15 text-amber-800 dark:text-amber-300 font-mono text-xs font-bold">${escapeHtml(item.year)} 年</span>` : ''}
+              <span class="text-xs font-semibold text-stone-500 dark:text-slate-400">相關條目：${escapeHtml(item.pageTitle)}</span>
+            </div>
+            <p class="text-sm sm:text-base font-bold text-stone-900 dark:text-white leading-relaxed">${escapeHtml(item.text)}</p>
+            ${item.extract ? `<p class="text-xs sm:text-sm text-stone-600 dark:text-slate-300 leading-relaxed line-clamp-3">${escapeHtml(item.extract)}</p>` : ''}
+            <div class="pt-1">
+              <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-emerald-700 dark:text-emerald-400 hover:underline">
+                <span>前往維基百科查證「${escapeHtml(item.pageTitle)}」</span>
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+        `;
+      } else {
+        const item = state.randomWikiItem;
+        if (!item) {
+          container.innerHTML = '<div class="text-sm text-stone-500 dark:text-slate-400">點擊「抽下一則隨機條目」立即從維基百科探索新知識。</div>';
+          return;
+        }
+        if (statusText) {
+          statusText.textContent = '即時連線維基百科隨機條目・無限擴充新知識';
+        }
+        container.innerHTML = `
+          <div class="space-y-2.5">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-md bg-violet-500/15 text-violet-800 dark:text-violet-300 text-xs font-bold">維基隨機新知</span>
+              <span class="text-xs text-stone-500 dark:text-slate-400">${escapeHtml(item.description)}</span>
+            </div>
+            <h3 class="text-base sm:text-lg font-extrabold text-stone-900 dark:text-white leading-snug">${escapeHtml(item.title)}</h3>
+            <p class="text-xs sm:text-sm text-stone-600 dark:text-slate-300 leading-relaxed">${escapeHtml(item.extract)}</p>
+            <div class="pt-1">
+              <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-emerald-700 dark:text-emerald-400 hover:underline">
+                <span>前往維基百科閱讀完整條目與來源</span>
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+        `;
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function downloadDailyReminderIcs() {
+      const timeVal = (document.getElementById('reminderTimeInput') && document.getElementById('reminderTimeInput').value) || '09:00';
+      const [hh, mm] = timeVal.split(':');
+      const now = new Date();
+      const y = now.getFullYear();
+      const mo = String(now.getMonth() + 1).padStart(2, '0');
+      const da = String(now.getDate()).padStart(2, '0');
+      const dtStart = `${y}${mo}${da}T${hh || '09'}${mm || '00'}00`;
+      const endMin = String((Number(mm || 0) + 5) % 60).padStart(2, '0');
+      const dtEnd = `${y}${mo}${da}T${hh || '09'}${endMin}00`;
+      const ics = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//DailyTrivia//ZH-TW//EN',
+        'BEGIN:VEVENT',
+        `UID:daily-trivia-${Date.now()}@local`,
+        `DTSTART:${dtStart}`,
+        `DTEND:${dtEnd}`,
+        'RRULE:FREQ=DAILY',
+        'SUMMARY:每日冷知識更新提醒',
+        'DESCRIPTION:打開你的每日冷知識 App，查看今天的跨領域冷知識與維基百科歷史上的今天！',
+        'BEGIN:VALARM',
+        'TRIGGER:-PT0M',
+        'ACTION:DISPLAY',
+        'DESCRIPTION:今日冷知識已自動更新！',
+        'END:VALARM',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+
+      try {
+        const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'daily-trivia-reminder.ics';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast(`已下載每天 ${timeVal} 的行事曆提醒檔案`);
+      } catch (e) {
+        showToast('無法下載提醒檔，請直接在手機行事曆新增每日提醒');
+      }
+    }
+
+    // Renderers
+    function renderNavigation() {
+      document.getElementById('desktopSavedBadge').textContent = state.favorites.length;
+      document.getElementById('mobileSavedBadge').textContent = state.favorites.length;
+      document.getElementById('headerLearnedCount').textContent = state.learned.length;
+
+      document.querySelectorAll('.nav-tab').forEach(btn => {
+        const active = btn.dataset.tab === state.activeTab;
+        btn.className = active
+          ? 'nav-tab px-4 py-1.5 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 bg-white dark:bg-slate-800 text-stone-900 dark:text-white shadow-sm'
+          : 'nav-tab px-4 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 text-stone-600 dark:text-slate-400 hover:text-stone-900 dark:hover:text-white';
+      });
+
+      document.querySelectorAll('.mobile-tab').forEach(btn => {
+        const active = btn.dataset.tab === state.activeTab;
+        btn.className = active
+          ? 'mobile-tab min-h-[48px] rounded-xl flex flex-col items-center justify-center gap-0.5 text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 transition-colors'
+          : 'mobile-tab min-h-[48px] rounded-xl flex flex-col items-center justify-center gap-0.5 text-xs font-medium text-stone-500 dark:text-slate-400 transition-colors';
+      });
+
+      document.getElementById('viewToday').classList.toggle('hidden', state.activeTab !== 'today');
+      document.getElementById('viewExplore').classList.toggle('hidden', state.activeTab !== 'explore');
+      document.getElementById('viewSaved').classList.toggle('hidden', state.activeTab !== 'saved');
+    }
+
+    function renderActionButtons(learnedBtn, saveBtn, factId) {
+      const isLearned = state.learned.includes(factId);
+      const isSaved = state.favorites.includes(factId);
+
+      learnedBtn.className = isLearned
+        ? 'min-h-[44px] px-4 py-2 rounded-xl border border-emerald-500/40 bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 text-sm font-semibold inline-flex items-center gap-2 transition-all'
+        : 'min-h-[44px] px-4 py-2 rounded-xl border border-stone-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700 text-stone-700 dark:text-slate-200 text-sm font-semibold inline-flex items-center gap-2 transition-all';
+      learnedBtn.innerHTML = `<i data-lucide="${isLearned ? 'check-circle-2' : 'lightbulb'}" class="w-4 h-4"></i><span>${isLearned ? '已長知識' : '長知識了！'}</span>`;
+
+      saveBtn.className = isSaved
+        ? 'min-h-[44px] px-4 py-2 rounded-xl border border-amber-500/40 bg-amber-500/15 text-amber-800 dark:text-amber-300 text-sm font-semibold inline-flex items-center gap-2 transition-all'
+        : 'min-h-[44px] px-4 py-2 rounded-xl border border-stone-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-stone-100 dark:hover:bg-slate-700 text-stone-700 dark:text-slate-200 text-sm font-semibold inline-flex items-center gap-2 transition-all';
+      saveBtn.innerHTML = `<i data-lucide="${isSaved ? 'bookmark-check' : 'bookmark'}" class="w-4 h-4"></i><span>${isSaved ? '已收藏' : '收藏'}</span>`;
+    }
+
+    function renderTodayView() {
+      const fact = getCurrentTodayFact();
+      const cat = CATEGORIES[fact.category];
+      const targetDate = getTargetDate(state.dayOffset);
+      const factIndex = FACTS.findIndex(f => f.id === fact.id) + 1;
+
+      document.getElementById('displayDateLabel').textContent = formatChineseDate(targetDate);
+      const statusEl = document.getElementById('displayDayStatus');
+      const backBtn = document.getElementById('backToTodayBtn');
+
+      if (state.overrideFactId) {
+        statusEl.textContent = '隨機探索模式（點擊「回到今日」返回每日精選）';
+        backBtn.classList.remove('hidden');
+      } else if (state.dayOffset === 0) {
+        statusEl.textContent = '今日專屬冷知識・每日午夜自動更新';
+        backBtn.classList.add('hidden');
+      } else if (state.dayOffset < 0) {
+        statusEl.textContent = `回顧 ${Math.abs(state.dayOffset)} 天前的冷知識`;
+        backBtn.classList.remove('hidden');
+      } else {
+        statusEl.textContent = `搶先看 ${state.dayOffset} 天後的冷知識`;
+        backBtn.classList.remove('hidden');
+      }
+
+      document.getElementById('todayAccentBar').className = `h-2 w-full ${cat.bar}`;
+      const pill = document.getElementById('todayCategoryPill');
+      pill.className = `inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs sm:text-sm font-semibold ${cat.pill}`;
+      pill.innerHTML = `<i data-lucide="${cat.icon}" class="w-3.5 h-3.5"></i><span>${cat.name}</span>`;
+
+      document.getElementById('todayIndexTag').textContent = `#${String(factIndex).padStart(2, '0')} / ${FACTS.length}`;
+      document.getElementById('todayTitle').textContent = fact.title;
+      document.getElementById('todayBody').textContent = fact.body;
+
+      const highlightsEl = document.getElementById('todayHighlights');
+      highlightsEl.innerHTML = fact.highlights.map(h => `
+        <div class="rounded-xl bg-stone-50 dark:bg-slate-800/60 border border-stone-200/70 dark:border-slate-700/70 px-3.5 py-2.5">
+          <div class="text-[11px] font-medium text-stone-500 dark:text-slate-400">${h.label}</div>
+          <div class="text-sm font-bold text-stone-900 dark:text-white mt-0.5">${h.value}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('todaySourceTitle').textContent = fact.sourceTitle;
+      document.getElementById('todaySourceLink').href = fact.sourceUrl;
+
+      renderActionButtons(
+        document.getElementById('todayLearnedBtn'),
+        document.getElementById('todaySaveBtn'),
+        fact.id
+      );
+
+      // Quick Category Grid
+      const homeGrid = document.getElementById('homeCategoryGrid');
+      homeGrid.innerHTML = Object.entries(CATEGORIES).map(([key, c]) => {
+        const count = FACTS.filter(f => f.category === key).length;
+        return `
+          <button type="button" data-quick-cat="${key}" class="min-h-[46px] px-3 py-2.5 rounded-xl border border-stone-200/80 dark:border-slate-800 bg-stone-50/70 dark:bg-slate-800/50 hover:bg-stone-100 dark:hover:bg-slate-800 flex items-center justify-between gap-2 text-left transition-colors">
+            <span class="flex items-center gap-2 min-w-0">
+              <span class="w-2.5 h-2.5 rounded-full ${c.bar} shrink-0"></span>
+              <span class="text-xs sm:text-sm font-semibold text-stone-800 dark:text-slate-200 truncate">${c.name}</span>
+            </span>
+            <span class="text-xs font-mono text-stone-400 dark:text-slate-500 shrink-0">${count}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function createCompactCardHTML(fact) {
+      const cat = CATEGORIES[fact.category];
+      const isSaved = state.favorites.includes(fact.id);
+      const isLearned = state.learned.includes(fact.id);
+      return `
+        <article class="bg-white dark:bg-slate-900 border border-stone-200/90 dark:border-slate-800 rounded-2xl overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-md hover:border-amber-400/60 dark:hover:border-amber-500/50 transition-all">
+          <div>
+            <div class="h-1.5 w-full ${cat.bar}"></div>
+            <div class="p-4 sm:p-5 space-y-3">
+              <div class="flex items-center justify-between gap-2">
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold ${cat.pill}">
+                  <i data-lucide="${cat.icon}" class="w-3 h-3"></i>
+                  <span>${cat.name}</span>
+                </span>
+                <div class="flex items-center gap-1">
+                  ${isLearned ? '<span title="已讀" class="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center"><i data-lucide="check" class="w-3.5 h-3.5"></i></span>' : ''}
+                  <button type="button" data-card-save="${fact.id}" aria-label="${isSaved ? '取消收藏' : '加入收藏'}" class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${isSaved ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400' : 'text-stone-400 hover:bg-stone-100 dark:hover:bg-slate-800'}">
+                    <i data-lucide="${isSaved ? 'bookmark-check' : 'bookmark'}" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </div>
+              <button type="button" data-open-modal="${fact.id}" class="text-left block w-full group focus:outline-none">
+                <h3 class="text-base font-bold text-stone-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors leading-snug">${fact.title}</h3>
+                <p class="text-xs sm:text-sm text-stone-600 dark:text-slate-400 mt-2 line-clamp-3 leading-relaxed">${fact.body}</p>
+              </button>
+            </div>
+          </div>
+          <div class="px-4 sm:px-5 py-3 bg-stone-50/80 dark:bg-slate-800/40 border-t border-stone-100 dark:border-slate-800 flex items-center justify-between gap-2">
+            <button type="button" data-open-modal="${fact.id}" class="text-xs font-semibold text-stone-700 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+              閱讀全文 →
+            </button>
+            <a href="${fact.sourceUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:underline">
+              <span>維基百科查證</span>
+              <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderExploreView() {
+      // Category Chips
+      const chipsEl = document.getElementById('exploreCategoryChips');
+      const allBtn = `
+        <button type="button" data-filter-cat="all" class="shrink-0 min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-colors ${state.selectedCategory === 'all' ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-slate-950' : 'bg-stone-100 dark:bg-slate-800 text-stone-600 dark:text-slate-300 hover:bg-stone-200 dark:hover:bg-slate-700'}">
+          全部 (${FACTS.length})
+        </button>
+      `;
+      const catBtns = Object.entries(CATEGORIES).map(([key, c]) => {
+        const count = FACTS.filter(f => f.category === key).length;
+        const active = state.selectedCategory === key;
+        return `
+          <button type="button" data-filter-cat="${key}" class="shrink-0 min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 transition-colors ${active ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-slate-950' : 'bg-stone-100 dark:bg-slate-800 text-stone-600 dark:text-slate-300 hover:bg-stone-200 dark:hover:bg-slate-700'}">
+            <span>${c.name}</span>
+            <span class="opacity-70 text-xs">${count}</span>
+          </button>
+        `;
+      }).join('');
+      chipsEl.innerHTML = allBtn + catBtns;
+
+      // Filter Facts
+      const q = state.searchQuery.trim().toLowerCase();
+      const filtered = FACTS.filter(f => {
+        const matchCat = state.selectedCategory === 'all' || f.category === state.selectedCategory;
+        if (!matchCat) return false;
+        if (!q) return true;
+        const catName = CATEGORIES[f.category].name.toLowerCase();
+        return f.title.toLowerCase().includes(q) || f.body.toLowerCase().includes(q) || catName.includes(q);
+      });
+
+      document.getElementById('exploreResultCount').textContent = `顯示 ${filtered.length} / ${FACTS.length} 則冷知識`;
+      document.getElementById('clearFiltersBtn').classList.toggle('hidden', state.selectedCategory === 'all' && !q);
+
+      const grid = document.getElementById('exploreGrid');
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 rounded-2xl p-10 text-center space-y-2">
+            <div class="text-stone-400 flex justify-center"><i data-lucide="search-x" class="w-8 h-8"></i></div>
+            <div class="font-bold text-stone-800 dark:text-slate-200">找不到符合「${state.searchQuery}」的冷知識</div>
+            <p class="text-sm text-stone-500 dark:text-slate-400">試試切換其他領域或清除搜尋關鍵字</p>
+          </div>
+        `;
+      } else {
+        grid.innerHTML = filtered.map(createCompactCardHTML).join('');
+      }
+    }
+
+    function renderSavedView() {
+      document.getElementById('statLearnedNum').textContent = `${state.learned.length} / ${FACTS.length}`;
+      document.getElementById('statSavedNum').textContent = state.favorites.length;
+
+      const progEl = document.getElementById('categoryProgressList');
+      progEl.innerHTML = Object.entries(CATEGORIES).map(([key, c]) => {
+        const items = FACTS.filter(f => f.category === key);
+        const done = items.filter(f => state.learned.includes(f.id)).length;
+        const pct = items.length > 0 ? Math.round((done / items.length) * 100) : 0;
+        return `
+          <div class="rounded-xl bg-stone-50 dark:bg-slate-800/60 border border-stone-200/70 dark:border-slate-700/70 p-3 space-y-1.5">
+            <div class="flex items-center justify-between text-xs font-semibold">
+              <span class="text-stone-800 dark:text-slate-200">${c.name}</span>
+              <span class="font-mono text-stone-500 dark:text-slate-400">${done} / ${items.length} (${pct}%)</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-stone-200 dark:bg-slate-700 overflow-hidden">
+              <div class="h-full rounded-full ${c.bar} transition-all duration-300" style="width: ${pct}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const savedFacts = FACTS.filter(f => state.favorites.includes(f.id));
+      const savedGrid = document.getElementById('savedGrid');
+      if (savedFacts.length === 0) {
+        savedGrid.innerHTML = `
+          <div class="col-span-full bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 rounded-2xl p-10 text-center space-y-3">
+            <div class="text-amber-500 flex justify-center"><i data-lucide="bookmark" class="w-8 h-8"></i></div>
+            <div class="font-bold text-stone-800 dark:text-slate-200">還沒有收藏任何冷知識</div>
+            <p class="text-sm text-stone-500 dark:text-slate-400">看到有趣的冷知識時，點擊「收藏」就能在這裡隨時回顧與查證</p>
+            <button type="button" id="emptyGoExploreBtn" class="min-h-[42px] px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold transition-colors">
+              前往領域探索
+            </button>
+          </div>
+        `;
+      } else {
+        savedGrid.innerHTML = savedFacts.map(createCompactCardHTML).join('');
+      }
+    }
+
+    function renderModal() {
+      const modal = document.getElementById('factModal');
+      if (!state.modalFactId) {
+        modal.classList.add('hidden');
+        return;
+      }
+      const fact = FACTS.find(f => f.id === state.modalFactId);
+      if (!fact) {
+        modal.classList.add('hidden');
+        return;
+      }
+      const cat = CATEGORIES[fact.category];
+      modal.classList.remove('hidden');
+
+      document.getElementById('modalAccentBar').className = `h-2 w-full ${cat.bar}`;
+      const pill = document.getElementById('modalCategoryPill');
+      pill.className = `inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${cat.pill}`;
+      pill.innerHTML = `<i data-lucide="${cat.icon}" class="w-3.5 h-3.5"></i><span>${cat.name}</span>`;
+
+      document.getElementById('modalTitle').textContent = fact.title;
+      document.getElementById('modalBody').textContent = fact.body;
+      document.getElementById('modalHighlights').innerHTML = fact.highlights.map(h => `
+        <div class="rounded-xl bg-stone-50 dark:bg-slate-800/70 border border-stone-200/70 dark:border-slate-700/70 px-3 py-2">
+          <div class="text-[11px] text-stone-500 dark:text-slate-400">${h.label}</div>
+          <div class="text-xs sm:text-sm font-bold text-stone-900 dark:text-white mt-0.5">${h.value}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('modalSourceTitle').textContent = fact.sourceTitle;
+      document.getElementById('modalSourceLink').href = fact.sourceUrl;
+
+      renderActionButtons(
+        document.getElementById('modalLearnedBtn'),
+        document.getElementById('modalSaveBtn'),
+        fact.id
+      );
+    }
+
+    function renderAll() {
+      renderNavigation();
+      renderTodayView();
+      renderExploreView();
+      renderSavedView();
+      renderModal();
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // Event Wiring
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      const box = document.getElementById('nativeInstallBox');
+      if (box) box.classList.remove('hidden');
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        checkAutoDateRollover();
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setupDynamicManifest();
+      applyTheme();
+      startCountdown();
+      renderAll();
+      loadLiveWikipediaForCurrentDate(false);
+
+      // Brand click -> Today
+      document.getElementById('brandHomeBtn').addEventListener('click', () => {
+        state.activeTab = 'today';
+        state.dayOffset = 0;
+        state.overrideFactId = null;
+        renderAll();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // Theme toggle
+      document.getElementById('themeToggleBtn').addEventListener('click', () => {
+        state.darkMode = !state.darkMode;
+        saveStorage('dt_dark_v1', state.darkMode);
+        applyTheme();
+      });
+
+      // Desktop & Mobile Tabs
+      document.querySelectorAll('[data-tab]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.activeTab = btn.dataset.tab;
+          renderAll();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
+
+      // Date Controls
+      document.getElementById('prevDayBtn').addEventListener('click', () => {
+        state.overrideFactId = null;
+        state.dayOffset -= 1;
+        renderTodayView();
+        if (state.liveMode === 'onthisday') loadLiveWikipediaForCurrentDate(false);
+        if (window.lucide) lucide.createIcons();
+      });
+
+      document.getElementById('nextDayBtn').addEventListener('click', () => {
+        state.overrideFactId = null;
+        state.dayOffset += 1;
+        renderTodayView();
+        if (state.liveMode === 'onthisday') loadLiveWikipediaForCurrentDate(false);
+        if (window.lucide) lucide.createIcons();
+      });
+
+      document.getElementById('backToTodayBtn').addEventListener('click', () => {
+        state.overrideFactId = null;
+        state.dayOffset = 0;
+        renderTodayView();
+        if (state.liveMode === 'onthisday') loadLiveWikipediaForCurrentDate(false);
+        if (window.lucide) lucide.createIcons();
+      });
+
+      // Live Wikipedia Controls
+      document.getElementById('liveModeOnThisDayBtn').addEventListener('click', () => {
+        state.liveMode = 'onthisday';
+        if (state.onThisDayEvents.length === 0) {
+          loadLiveWikipediaForCurrentDate(false);
+        } else {
+          renderLiveWikiSection();
+        }
+      });
+
+      document.getElementById('liveModeRandomBtn').addEventListener('click', () => {
+        state.liveMode = 'random';
+        if (!state.randomWikiItem) {
+          fetchRandomWikiFact();
+        } else {
+          renderLiveWikiSection();
+        }
+      });
+
+      document.getElementById('liveWikiNextBtn').addEventListener('click', () => {
+        if (state.liveMode === 'onthisday') {
+          if (state.onThisDayEvents.length > 0) {
+            state.onThisDayIndex = (state.onThisDayIndex + 1) % state.onThisDayEvents.length;
+            renderLiveWikiSection();
+          } else {
+            loadLiveWikipediaForCurrentDate(true);
+          }
+        } else {
+          fetchRandomWikiFact();
+        }
+      });
+
+      document.getElementById('liveWikiContent').addEventListener('click', (e) => {
+        if (e.target.closest('#liveRetryBtn')) {
+          if (state.liveMode === 'onthisday') {
+            loadLiveWikipediaForCurrentDate(true);
+          } else {
+            fetchRandomWikiFact();
+          }
+        }
+      });
+
+      // Install App & Reminder Modal Controls
+      document.getElementById('installAppBtn').addEventListener('click', () => {
+        state.installModalOpen = true;
+        document.getElementById('installModal').classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+      });
+
+      document.getElementById('closeInstallModalBtn').addEventListener('click', () => {
+        state.installModalOpen = false;
+        document.getElementById('installModal').classList.add('hidden');
+      });
+
+      document.getElementById('installModal').addEventListener('click', (e) => {
+        if (e.target.id === 'installModal') {
+          state.installModalOpen = false;
+          document.getElementById('installModal').classList.add('hidden');
+        }
+      });
+
+      document.getElementById('triggerNativeInstallBtn').addEventListener('click', async () => {
+        if (!deferredInstallPrompt) return;
+        deferredInstallPrompt.prompt();
+        const choice = await deferredInstallPrompt.userChoice;
+        if (choice && choice.outcome === 'accepted') {
+          showToast('已開始安裝每日冷知識 App');
+        }
+        deferredInstallPrompt = null;
+        document.getElementById('nativeInstallBox').classList.add('hidden');
+      });
+
+      document.getElementById('downloadIcsBtn').addEventListener('click', () => {
+        downloadDailyReminderIcs();
+      });
+
+      // Random Fact
+      document.getElementById('randomFactBtn').addEventListener('click', () => {
+        const current = getCurrentTodayFact();
+        const pool = FACTS.filter(f => f.id !== current.id);
+        const pick = pool[Math.floor(Math.random() * pool.length)];
+        state.overrideFactId = pick.id;
+        renderTodayView();
+        if (window.lucide) lucide.createIcons();
+        showToast(`已隨機抽取「${CATEGORIES[pick.category].name}」冷知識`);
+      });
+
+      // Today Card Actions
+      document.getElementById('todayLearnedBtn').addEventListener('click', () => {
+        toggleLearned(getCurrentTodayFact().id);
+      });
+
+      document.getElementById('todaySaveBtn').addEventListener('click', () => {
+        toggleFavorite(getCurrentTodayFact().id);
+      });
+
+      document.getElementById('todayCopyBtn').addEventListener('click', () => {
+        copyFactToClipboard(getCurrentTodayFact());
+      });
+
+      document.getElementById('goExploreAllBtn').addEventListener('click', () => {
+        state.selectedCategory = 'all';
+        state.activeTab = 'explore';
+        renderAll();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // Quick Category Grid delegation
+      document.getElementById('homeCategoryGrid').addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-quick-cat]');
+        if (!btn) return;
+        state.selectedCategory = btn.dataset.quickCat;
+        state.activeTab = 'explore';
+        renderAll();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // Explore Filter Chips delegation
+      document.getElementById('exploreCategoryChips').addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-filter-cat]');
+        if (!btn) return;
+        state.selectedCategory = btn.dataset.filterCat;
+        renderExploreView();
+        if (window.lucide) lucide.createIcons();
+      });
+
+      // Search input
+      document.getElementById('searchInput').addEventListener('input', (e) => {
+        state.searchQuery = e.target.value;
+        renderExploreView();
+        if (window.lucide) lucide.createIcons();
+      });
+
+      document.getElementById('clearFiltersBtn').addEventListener('click', () => {
+        state.selectedCategory = 'all';
+        state.searchQuery = '';
+        document.getElementById('searchInput').value = '';
+        renderExploreView();
+        if (window.lucide) lucide.createIcons();
+      });
+
+      // Card Grids delegation (Explore + Saved)
+      ['exploreGrid', 'savedGrid'].forEach(gridId => {
+        document.getElementById(gridId).addEventListener('click', (e) => {
+          const emptyBtn = e.target.closest('#emptyGoExploreBtn');
+          if (emptyBtn) {
+            state.activeTab = 'explore';
+            renderAll();
+            return;
+          }
+          const saveBtn = e.target.closest('[data-card-save]');
+          if (saveBtn) {
+            toggleFavorite(saveBtn.dataset.cardSave);
+            return;
+          }
+          const openBtn = e.target.closest('[data-open-modal]');
+          if (openBtn) {
+            state.modalFactId = openBtn.dataset.openModal;
+            renderModal();
+            if (window.lucide) lucide.createIcons();
+          }
+        });
+      });
+
+      // Modal Controls
+      document.getElementById('closeModalBtn').addEventListener('click', () => {
+        state.modalFactId = null;
+        renderModal();
+      });
+
+      document.getElementById('factModal').addEventListener('click', (e) => {
+        if (e.target.id === 'factModal') {
+          state.modalFactId = null;
+          renderModal();
+        }
+      });
+
+      document.getElementById('modalLearnedBtn').addEventListener('click', () => {
+        if (state.modalFactId) toggleLearned(state.modalFactId);
+      });
+
+      document.getElementById('modalSaveBtn').addEventListener('click', () => {
+        if (state.modalFactId) toggleFavorite(state.modalFactId);
+      });
+
+      document.getElementById('modalCopyBtn').addEventListener('click', () => {
+        const fact = FACTS.find(f => f.id === state.modalFactId);
+        if (fact) copyFactToClipboard(fact);
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (state.modalFactId) {
+            state.modalFactId = null;
+            renderModal();
+          }
+          if (state.installModalOpen) {
+            state.installModalOpen = false;
+            document.getElementById('installModal').classList.add('hidden');
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
